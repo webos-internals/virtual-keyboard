@@ -1222,6 +1222,98 @@ index 4307893..ff5ea6f 100644
  /* Compressed by the perl version of jsmin. */
  /* JavaScript::Minifier 0.02 */
  
+diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable.json
+new file mode 100644
+index 0000000..1d35116
+--- /dev/null
++++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable.json
+@@ -0,0 +1,86 @@
++[
++  {"keyCode": 81, "letter":"q", "list": ["q"], alt: "/"},
++  {"keyCode": 87, "letter":"w", "list": ["w"], alt: "+"},
++  {"keyCode": 69, "letter":"e", "list": ["e"], alt: "1"},
++  {"keyCode": 82, "letter":"r", "list": ["r"], alt: "2"},
++  {"keyCode": 84, "letter":"t", "list": ["t"], alt: "3"},
++  {"keyCode": 89, "letter":"y", "list": ["y"], alt: "("},
++  {"keyCode": 85, "letter":"u", "list": ["u"], alt: ")"},
++  {"keyCode": 73, "letter":"i", "list": ["i"], alt: "%"},
++  {"keyCode": 79, "letter":"o", "list": ["o"], alt: "\""},
++  {"keyCode": 80, "letter":"p", "list": ["p"], alt: "="},
++
++  {"keyCode": 65, "letter":"a", "list": ["a"], alt: "&"},
++  {"keyCode": 83, "letter":"s", "list": ["s"], alt: "-"},
++  {"keyCode": 68, "letter":"d", "list": ["d"], alt: "4"},
++  {"keyCode": 70, "letter":"f", "list": ["f"], alt: "5"},
++  {"keyCode": 71, "letter":"g", "list": ["g"], alt: "6"},
++  {"keyCode": 72, "letter":"h", "list": ["h"], alt: "$"},
++  {"keyCode": 74, "letter":"j", "list": ["j"], alt: "!"},
++  {"keyCode": 75, "letter":"k", "list": ["k"], alt: ":"},
++  {"keyCode": 76, "letter":"l", "list": ["l"], alt: "'"},
++  {"keyCode": 8, "letter":"\b", "list": ["&laquo"]},
++
++  {"keyCode": 18, "letter":"alt-orange", "list": ["&curren"]},
++  {"keyCode": 90, "letter":"z", "list": ["z"], alt: "*"},
++  {"keyCode": 88, "letter":"x", "list": ["x"], alt: "7"},
++  {"keyCode": 67, "letter":"c", "list": ["c"], alt: "8"},
++  {"keyCode": 86, "letter":"v", "list": ["v"], alt: "9"},
++  {"keyCode": 66, "letter":"b", "list": ["b"], alt: "#"},
++  {"keyCode": 78, "letter":"n", "list": ["n"], alt: "?"},
++  {"keyCode": 77, "letter":"m", "list": ["m"], alt: ";"},
++  {"keyCode": 188, "letter":",", "list": [","], alt: "_"},
++  {"keyCode": 13, "letter":"\n", "list": ["&raquo"]},
++
++  {"keyCode": 00, "letter":"blank", "list": ["&deg"]},
++  {"keyCode": 16, "letter":"shift", "list": ["&yen"], "span": 1.5},
++  {"keyCode": 90, "letter":"@", "list": ["@"], alt: "0"},
++  {"keyCode": 32, "letter":" ", "list": ["&nbsp"], "span": 3},
++  {"keyCode": 190, "letter":".", "list": ["."]},
++  {"keyCode": 17, "letter":"sym-ctrl", "list": ["&iquest"], "span": 1.5},
++  {"keyCode": 00, "letter":"blank", "list": ["&deg"]},
++
++  {"keyCode": 190, "letter":"", "list": ["/","?","+","(",")","%","\"","=","&","-","$","!",":","'","&","#","_"]},
++  {"keyCode": 48, "letter":"0", "list": ["0"]},
++  {"keyCode": 49, "letter":"1", "list": ["1"]},
++  {"keyCode": 50, "letter":"2", "list": ["2"]},
++  {"keyCode": 51, "letter":"3", "list": ["3"]},
++  {"keyCode": 52, "letter":"4", "list": ["4"]},
++  {"keyCode": 53, "letter":"5", "list": ["5"]},
++  {"keyCode": 54, "letter":"6", "list": ["6"]},
++  {"keyCode": 55, "letter":"7", "list": ["7"]},
++  {"keyCode": 56, "letter":"8", "list": ["8"]},
++  {"keyCode": 57, "letter":"9", "list": ["9"]},
++
++  {"keyCode": 190, "letter":"", "list": ["~","\\","•","`","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
++  {"keyCode": 65,  "letter":"", "list": ["á","à","ä","â","ã","å","æ"]},
++  {"keyCode": 65,  "letter":"", "list": ["Á","À","Ä","Â","Ã","Å","Æ"], "modifier": 16},
++  {"keyCode": 67,  "letter":"", "list": ["©","ç"]},
++  {"keyCode": 67,  "letter":"", "list": ["Ç"], "modifier": 16},
++  {"keyCode": 69,  "letter":"", "list": ["é","è","ë","ê","ē"]},
++  {"keyCode": 69,  "letter":"", "list": ["É","È","Ë","Ê"], "modifier": 16},
++  {"keyCode": 73,  "letter":"", "list": ["í","ì","ï","î"]},
++  {"keyCode": 73,  "letter":"", "list": ["Í","Ì","Ï","Î"], "modifier": 16},
++  {"keyCode": 78,  "letter":"", "list": ["ñ"]},
++  {"keyCode": 78,  "letter":"", "list": ["Ñ"], "modifier": 16},
++  {"keyCode": 79,  "letter":"", "list": ["ó","ò","ö","ô","œ","õ","ø"]},
++  {"keyCode": 79,  "letter":"", "list": ["Ó","Ò","Ö","Ô","Œ","Õ","Ø"], "modifier": 16},
++  {"keyCode": 83,  "letter":"", "list": ["ß"]},
++  {"keyCode": 85,  "letter":"", "list": ["ú","ù","ü","û"]},
++  {"keyCode": 85,  "letter":"", "list": ["Ú","Ù","Ü","Û"], "modifier": 16},
++  {"keyCode": 88,  "letter":"", "list": ["×","¤"]},
++  {"keyCode": 89,  "letter":"", "list": ["ÿ"]},
++  {"keyCode": 89,  "letter":"", "list": ["Ÿ"], "modifier": 16},
++  {"keyCode": 82,  "letter":"", "list": ["®"]},
++  {"keyCode": 80,  "letter":"", "list": ["¶"]},
++  {"keyCode": 84,  "letter":"", "list": ["™"]},
++  {"keyCode": 68,  "letter":"", "list": ["†","‡"], "modifier": 16},
++  {"keyCode": 96,  "letter":"", "list": ["°"]},
++  {"keyCode": 97,  "letter":"", "list": ["¹", "¼", "½"]},
++  {"keyCode": 98,  "letter":"", "list": ["²"]},
++  {"keyCode": 99,  "letter":"", "list": ["³", "¾"]},
++  {"keyCode": 67,  "letter":"", "list": ["¡"]},
++  {"keyCode": 67,  "letter":"", "list": ["¿"]},
++  {"keyCode": 67,  "letter":"", "list": [":-)", ":-(", ";-)"]},
++  {"keyCode": 67,  "letter":"", "list": ["$","¢","€","£","¥"]}
++]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_fulltable.json
 new file mode 100644
 index 0000000..1d35116
@@ -1362,207 +1454,6 @@ index 0000000..d4a8128
 +  {"keyCode": 83, "letter":"s", "list": ["ß"]},
 +  {"keyCode": 85, "letter":"u", "list": ["ú","ù","ü","û"]},
 +  {"keyCode": 85, "letter":"U", "list": ["Ú","Ù","Ü","Û"], "modifier": 16},
-+  {"keyCode": 88, "letter":"x", "list": ["×","¤"]},
-+  {"keyCode": 89, "letter":"y", "list": ["ÿ"]},
-+  {"keyCode": 89, "letter":"Y", "list": ["Ÿ"], "modifier": 16},
-+  {"keyCode": 82, "letter":"r", "list": ["®"]},
-+  {"keyCode": 80, "letter":"p", "list": ["¶"]},
-+  {"keyCode": 84, "letter":"t", "list": ["™"]},
-+  {"keyCode": 68, "letter":"D", "list": ["†","‡"], "modifier": 16},
-+  {"keyCode": 96, "letter":"0", "list": ["°"]},
-+  {"keyCode": 97, "letter":"1", "list": ["¹", "¼", "½"]},
-+  {"keyCode": 98, "letter":"2", "list": ["²"]},
-+  {"keyCode": 99, "letter":"3", "list": ["³", "¾"]},
-+  {"keyCode": 67, "letter":"!", "list": ["¡"]},
-+  {"keyCode": 67, "letter":"?", "list": ["¿"]},
-+  {"keyCode": 67, "letter":":", "list": [":-)", ":-(", ";-)"]},
-+  {"keyCode": 67, "letter":"$", "list": ["$","¢","€","£","¥"]}
-+]
-diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_table.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_table.json
-new file mode 100644
-index 0000000..8544247
---- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_table.json
-@@ -0,0 +1,30 @@
-+[
-+  {"keyCode": 188, "letter":",", "list": ["~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 66,  "letter":"b", "list": ["b"]},
-+  {"keyCode": 190, "letter":".", "list": ["…","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 48,  "letter":"@", "list": ["°","•","Ø"]},
-+  {"keyCode": 65,  "letter":"a", "list": ["á","à","ä","â","ã","å","æ","Á","À","Ä","Â","Ã","Å","Æ","ª","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 66,  "letter":"b", "list": ["~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 67,  "letter":"c", "list": ["©","ç","Ç","¢"]},
-+  {"keyCode": 68,  "letter":"d", "list": ["†","‡"]},
-+  {"keyCode": 69,  "letter":"e", "list": ["é","è","ë","ê","ē","É","È","Ë","Ê","€","¹","¼","½"]},
-+  {"keyCode": 72,  "letter":"h", "list": ["¢","€","£","¥","ƒ"]},
-+  {"keyCode": 73,  "letter":"i", "list": ["í","ì","ï","î","Í","Ì","Ï","Î","÷","‰"]},
-+  {"keyCode": 74,  "letter":"j", "list": ["¡"]},
-+  {"keyCode": 75,  "letter":"k", "list": [":-)",":-(",";-)"]},
-+  {"keyCode": 76,  "letter":"l", "list": ["`","‘","’","‚","‛","\""]},
-+  {"keyCode": 77,  "letter":"m", "list": ["µ",":-)",":-(",";-)"]},
-+  {"keyCode": 78,  "letter":"n", "list": ["ñ","Ñ","¿"]},
-+  {"keyCode": 79,  "letter":"o", "list": ["ó","ò","ö","ô","œ","õ","ø","Ó","Ò","Ö","Ô","Œ","Õ","Ø","º","“","”","„","<",">","«","»"]},
-+  {"keyCode": 80,  "letter":"p", "list": ["¶","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 81,  "letter":"q", "list": ["\\","~","|"]},
-+  {"keyCode": 82,  "letter":"r", "list": ["®","²"]},
-+  {"keyCode": 83,  "letter":"s", "list": ["ß","š","Š","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","|"]},
-+  {"keyCode": 84,  "letter":"t", "list": ["™","³","¾"]},
-+  {"keyCode": 85,  "letter":"u", "list": ["ú","ù","ü","û","Ú","Ù","Ü","Û","[","]","{","}","<",">","«","»"]},
-+  {"keyCode": 86,  "letter":"v", "list": ["^"]},
-+  {"keyCode": 87,  "letter":"w", "list": ["÷","^","±"]},
-+  {"keyCode": 88,  "letter":"x", "list": ["×","¤"]},
-+  {"keyCode": 89,  "letter":"y", "list": ["ÿ","ý","Ÿ","Ý","¥","[","]","{","}","<",">","«","»"]},
-+  {"keyCode": 90,  "letter":"z", "list": ["ž","Ž","•"]}
-+]
-diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_table_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_table_azerty.json
-new file mode 100644
-index 0000000..8180a5a
---- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_table_azerty.json
-@@ -0,0 +1,29 @@
-+[
-+  {"keyCode": 188, "letter":",", "list": ["~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 190, "letter":".", "list": ["…","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 48,  "letter":"@", "list": ["°","•","Ø"]},
-+  {"keyCode": 65,  "letter":"a", "list": ["á","à","ä","â","ã","å","æ","Á","À","Ä","Â","Ã","Å","Æ","ª","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 66,  "letter":"b", "list": ["~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 67,  "letter":"c", "list": ["©","ç","Ç","¢"]},
-+  {"keyCode": 68,  "letter":"d", "list": ["†","‡"]},
-+  {"keyCode": 69,  "letter":"e", "list": ["é","è","ë","ê","ē","É","È","Ë","Ê","€","¹","¼","½"]},
-+  {"keyCode": 72,  "letter":"h", "list": ["¢","€","£","¥","ƒ"]},
-+  {"keyCode": 73,  "letter":"i", "list": ["í","ì","ï","î","Í","Ì","Ï","Î","÷","‰"]},
-+  {"keyCode": 74,  "letter":"j", "list": ["¡"]},
-+  {"keyCode": 75,  "letter":"k", "list": [":-)",":-(",";-)"]},
-+  {"keyCode": 76,  "letter":"l", "list": ["`","‘","’","‚","‛","\""]},
-+  {"keyCode": 77,  "letter":"m", "list": ["µ",":-)",":-(",";-)"]},
-+  {"keyCode": 78,  "letter":"n", "list": ["ñ","Ñ","¿"]},
-+  {"keyCode": 79,  "letter":"o", "list": ["ó","ò","ö","ô","œ","õ","ø","Ó","Ò","Ö","Ô","Œ","Õ","Ø","º","“","”","„","<",">","«","»"]},
-+  {"keyCode": 80,  "letter":"p", "list": ["¶","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 81,  "letter":"q", "list": ["\\","~","|"]},
-+  {"keyCode": 82,  "letter":"r", "list": ["®","²"]},
-+  {"keyCode": 83,  "letter":"s", "list": ["ß","š","Š","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","|"]},
-+  {"keyCode": 84,  "letter":"t", "list": ["™","³","¾"]},
-+  {"keyCode": 85,  "letter":"u", "list": ["ú","ù","ü","û","Ú","Ù","Ü","Û","[","]","{","}","<",">","«","»"]},
-+  {"keyCode": 86,  "letter":"v", "list": ["^"]},
-+  {"keyCode": 87,  "letter":"w", "list": ["÷","^","±"]},
-+  {"keyCode": 88,  "letter":"x", "list": ["×","¤"]},
-+  {"keyCode": 89,  "letter":"y", "list": ["ÿ","ý","Ÿ","Ý","¥","[","]","{","}","<",">","«","»"]},
-+  {"keyCode": 90,  "letter":"z", "list": ["ž","Ž","•"]}
-+]
-\ No newline at end of file
-diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_table_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_table_qwertz.json
-new file mode 100644
-index 0000000..8180a5a
---- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_table_qwertz.json
-@@ -0,0 +1,29 @@
-+[
-+  {"keyCode": 188, "letter":",", "list": ["~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 190, "letter":".", "list": ["…","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 48,  "letter":"@", "list": ["°","•","Ø"]},
-+  {"keyCode": 65,  "letter":"a", "list": ["á","à","ä","â","ã","å","æ","Á","À","Ä","Â","Ã","Å","Æ","ª","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 66,  "letter":"b", "list": ["~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 67,  "letter":"c", "list": ["©","ç","Ç","¢"]},
-+  {"keyCode": 68,  "letter":"d", "list": ["†","‡"]},
-+  {"keyCode": 69,  "letter":"e", "list": ["é","è","ë","ê","ē","É","È","Ë","Ê","€","¹","¼","½"]},
-+  {"keyCode": 72,  "letter":"h", "list": ["¢","€","£","¥","ƒ"]},
-+  {"keyCode": 73,  "letter":"i", "list": ["í","ì","ï","î","Í","Ì","Ï","Î","÷","‰"]},
-+  {"keyCode": 74,  "letter":"j", "list": ["¡"]},
-+  {"keyCode": 75,  "letter":"k", "list": [":-)",":-(",";-)"]},
-+  {"keyCode": 76,  "letter":"l", "list": ["`","‘","’","‚","‛","\""]},
-+  {"keyCode": 77,  "letter":"m", "list": ["µ",":-)",":-(",";-)"]},
-+  {"keyCode": 78,  "letter":"n", "list": ["ñ","Ñ","¿"]},
-+  {"keyCode": 79,  "letter":"o", "list": ["ó","ò","ö","ô","œ","õ","ø","Ó","Ò","Ö","Ô","Œ","Õ","Ø","º","“","”","„","<",">","«","»"]},
-+  {"keyCode": 80,  "letter":"p", "list": ["¶","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","µ","|"]},
-+  {"keyCode": 81,  "letter":"q", "list": ["\\","~","|"]},
-+  {"keyCode": 82,  "letter":"r", "list": ["®","²"]},
-+  {"keyCode": 83,  "letter":"s", "list": ["ß","š","Š","~","\\","`","•","÷","^","[","]","{","}","<",">","«","»","Ø","|"]},
-+  {"keyCode": 84,  "letter":"t", "list": ["™","³","¾"]},
-+  {"keyCode": 85,  "letter":"u", "list": ["ú","ù","ü","û","Ú","Ù","Ü","Û","[","]","{","}","<",">","«","»"]},
-+  {"keyCode": 86,  "letter":"v", "list": ["^"]},
-+  {"keyCode": 87,  "letter":"w", "list": ["÷","^","±"]},
-+  {"keyCode": 88,  "letter":"x", "list": ["×","¤"]},
-+  {"keyCode": 89,  "letter":"y", "list": ["ÿ","ý","Ÿ","Ý","¥","[","]","{","}","<",">","«","»"]},
-+  {"keyCode": 90,  "letter":"z", "list": ["ž","Ž","•"]}
-+]
-\ No newline at end of file
-diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/kbchars_fulltable.json
-new file mode 100644
-index 0000000..6774f8f
---- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/kbchars_fulltable.json
-@@ -0,0 +1,87 @@
-+[
-+  {"keyCode": 80, "letter":"q", "list": ["q"]},
-+  {"keyCode": 80, "letter":"w", "list": ["w"]},
-+  {"keyCode": 69, "letter":"e", "list": ["e"]},
-+  {"keyCode": 80, "letter":"r", "list": ["r"]},
-+  {"keyCode": 80, "letter":"t", "list": ["t"]},
-+  {"keyCode": 80, "letter":"y", "list": ["y"]},
-+  {"keyCode": 80, "letter":"u", "list": ["u"]},
-+  {"keyCode": 70, "letter":"i", "list": ["i"]},
-+  {"keyCode": 70, "letter":"o", "list": ["o"]},
-+  {"keyCode": 80, "letter":"p", "list": ["p"]},
-+
-+  {"keyCode": 65, "letter":"a", "list": ["a"]},
-+  {"keyCode": 80, "letter":"s", "list": ["s"]},
-+  {"keyCode": 68, "letter":"d", "list": ["d"]},
-+  {"keyCode": 70, "letter":"f", "list": ["f"]},
-+  {"keyCode": 70, "letter":"g", "list": ["g"]},
-+  {"keyCode": 70, "letter":"h", "list": ["h"]},
-+  {"keyCode": 70, "letter":"j", "list": ["j"]},
-+  {"keyCode": 70, "letter":"k", "list": ["k"]},
-+  {"keyCode": 70, "letter":"l", "list": ["l"]},
-+  {"keyCode": 8, "letter":"\b", "list": ["&laquo"]},
-+
-+  {"keyCode": 90, "letter":"O", "list": ["O"]},
-+  {"keyCode": 90, "letter":"z", "list": ["z"]},
-+  {"keyCode": 80, "letter":"x", "list": ["x"]},
-+  {"keyCode": 67, "letter":"c", "list": ["c"]},
-+  {"keyCode": 80, "letter":"v", "list": ["v"]},
-+  {"keyCode": 66, "letter":"b", "list": ["b"]},
-+  {"keyCode": 70, "letter":"n", "list": ["n"]},
-+  {"keyCode": 70, "letter":"m", "list": ["m"]},
-+  {"keyCode": 90, "letter":",", "list": [","]},
-+  {"keyCode": 90, "letter":"\n", "list": ["&raquo"]},
-+
-+  {"keyCode": 90, "letter":"blank", "list": ["&deg"]},
-+  {"keyCode": 90, "letter":"shift", "list": ["&yen"]},
-+  {"keyCode": 90, "letter":"@", "list": ["@"]},
-+  {"keyCode": 90, "letter":" ", "list": ["&nbsp"]},
-+  {"keyCode": 90, "letter":" ", "list": ["&nbsp"]},
-+  {"keyCode": 90, "letter":" ", "list": ["&nbsp"]},
-+  {"keyCode": 90, "letter":" ", "list": ["&nbsp"]},
-+  {"keyCode": 90, "letter":".", "list": ["."]},
-+  {"keyCode": 90, "letter":"sym", "list": ["&iquest"]},
-+  {"keyCode": 90, "letter":"blank", "list": ["&deg"]},
-+
-+  {"keyCode": 90, "letter":"0", "list": ["0"]},
-+  {"keyCode": 90, "letter":"1", "list": ["1"]},
-+  {"keyCode": 90, "letter":"2", "list": ["2"]},
-+  {"keyCode": 90, "letter":"3", "list": ["3"]},
-+  {"keyCode": 90, "letter":"4", "list": ["4"]},
-+  {"keyCode": 90, "letter":"5", "list": ["5"]},
-+  {"keyCode": 90, "letter":"6", "list": ["6"]},
-+  {"keyCode": 90, "letter":"7", "list": ["7"]},
-+  {"keyCode": 90, "letter":"8", "list": ["8"]},
-+  {"keyCode": 90, "letter":"9", "list": ["9"]},
-+  {"keyCode": 90, "letter":".", "list": ["."]},
-+
-+  {"keyCode": 65, "letter":"A", "list": ["A"], "modifier": 16},
-+  {"keyCode": 67, "letter":"c", "list": ["©","ç"]},
-+  {"keyCode": 67, "letter":"C", "list": ["Ç"], "modifier": 16},
-+  {"keyCode": 69, "letter":"e", "list": ["é","è","ë","ê","ē"]},
-+  {"keyCode": 69, "letter":"E", "list": ["É","È","Ë","Ê"], "modifier": 16},
-+  {"keyCode": 73, "letter":"i", "list": ["í","ì","ï","î"]},
-+  {"keyCode": 73, "letter":"I", "list": ["Í","Ì","Ï","Î"], "modifier": 16},
-+  {"keyCode": 78, "letter":"n", "list": ["ñ"]},
-+  {"keyCode": 78, "letter":"N", "list": ["Ñ"], "modifier": 16},
-+  {"keyCode": 79, "letter":"o", "list": ["ó","ò","ö","ô","œ","õ","ø"]},
-+  {"keyCode": 79, "letter":"O", "list": ["Ó","Ò","Ö","Ô","Œ","Õ","Ø"], "modifier": 16},
-+  {"keyCode": 83, "letter":"s", "list": ["ß"]},
-+  {"keyCode": 85, "letter":"u", "list": ["ú","ù","ü","û"]},
-+  {"keyCode": 85, "letter":"U", "list": ["Ú","Ù","ÜÛ"], "modifier": 16},
 +  {"keyCode": 88, "letter":"x", "list": ["×","¤"]},
 +  {"keyCode": 89, "letter":"y", "list": ["ÿ"]},
 +  {"keyCode": 89, "letter":"Y", "list": ["Ÿ"], "modifier": 16},
