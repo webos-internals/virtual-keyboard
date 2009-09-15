@@ -15,4 +15,10 @@ do
   rm -rf ${MEDIA_BASE}/$i
 done
 
+# Restart Luna
+if [ -z "$IPKG_OFFLINE_ROOT" ]; then # Defined by recent installers that also support flags.
+    /sbin/stop LunaSysMgr
+    /sbin/start LunaSysMgr
+fi
+
 exit 0
