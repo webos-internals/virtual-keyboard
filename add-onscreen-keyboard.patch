@@ -1,5 +1,5 @@
 diff --git a/usr/palm/frameworks/mojo/builtins/palmInitFramework191_15.js b/usr/palm/frameworks/mojo/builtins/palmInitFramework191_15.js
-index 4307893..170dfe8 100644
+index 4307893..8b8ab53 100644
 --- a/usr/palm/frameworks/mojo/builtins/palmInitFramework191_15.js
 +++ b/usr/palm/frameworks/mojo/builtins/palmInitFramework191_15.js
 @@ -674,6 +674,7 @@ _Dialog:'widget_dialog',
@@ -153,7 +153,7 @@ index 4307893..170dfe8 100644
  this.maybeSendPropertyChangeEvent(triggeringEvent);
  }
  },
-@@ -34320,6 +34365,1223 @@ return true;
+@@ -34320,6 +34365,1483 @@ return true;
  }
  return false;
  };
@@ -221,6 +221,12 @@ index 4307893..170dfe8 100644
 +  this.installed_themes=options.installed_themes;
 +}
 +
++this.funcIdx=20;
++this.dragIdx=30;
++this.shiftIdx=31;
++this.symIdx=35;
++this.themeIdx=36;
++
 +this.controller.exposeMethods(['close','isOpen']);
 +if(this.controller.attributes.target){
 +this.target=this.controller.get(this.controller.attributes.target);
@@ -235,6 +241,7 @@ index 4307893..170dfe8 100644
 +
 +if(this.renderWidget(this.controller.model.character)){
 +this.maybeSetDiv=this.maybeSetDiv.bind(this);
++this.generateKeyElement=this.generateKeyElement.bind(this);
 +
 +this.handleMouseOver=this.handleMouseOver.bindAsEventListener(this);
 +this.handleMouseUp=this.handleMouseUp.bindAsEventListener(this);
@@ -305,6 +312,24 @@ index 4307893..170dfe8 100644
 +
 +
 +/* oskb */
++generateKeyElement:function(img,html,output,index){
++  var newElement;
++
++  newElement = this.makeImg(img, output||" ", index);
++
++  if (!newElement) {
++    newElement=this.controller.document.createElement('span');
++    newElement.innerHTML=html || output;
++    newElement.name=index;
++    if (html) {
++      newElement.innerHTML="--";
++    }
++  }
++
++  return newElement;
++},
++
++/* oskb */
 +makeImg:function(img,alt,idx){
 +if (!img) {
 +  return null;
@@ -312,7 +337,19 @@ index 4307893..170dfe8 100644
 +
 +alt=alt||" ";
 +
++var e = new Image();
++var newImg;
++e.src=this.VIRT_KB_THEMES_PATH + this.theme + "/" + img;
++
++newImg=this.controller.document.createElement('img');
++newImg.addClassName('kb-img');
++newImg.src=this.VIRT_KB_THEMES_PATH + this.theme + "/" + img;
++newImg.alt=alt;
++newImg.name=idx;
++return newImg;
++/*
 +return "<img name='" + idx + "' class='kb-img' src='"+this.VIRT_KB_THEMES_PATH + this.theme + "/" + img + "' alt='" + alt + "'>";
++*/
 +},
 +
 +/* oskb */
@@ -358,10 +395,10 @@ index 4307893..170dfe8 100644
 +  if (keyCode === Mojo.Char.sym) {
 +    this.symIdx = index;
 +  }
-+  if (keyCode === 0) {
++  if (keyCode === 1) {
 +    this.dragIdx = index;
 +  }
-+  if (keyCode === 1) {
++  if (keyCode === 2) {
 +    this.themeIdx = index;
 +  }
 +},
@@ -377,43 +414,45 @@ index 4307893..170dfe8 100644
 +  var orientation = o;
 +  var mode = m;
 +  var themeObject=this.themeObject||this.localizedTableFull;
-+
-+  if (orientation&&mode) {
-+    themeObject.each(function(t){
-+      index=t.index;
-+      if ((index>=0)&&(index<that.charList.length)){
-+        data=that.charList[index];
-+        data.output=that.getKeyAttribute(t,index,orientation,mode,'output',that.charList);
-+        data.span=that.getKeyAttribute(t,index,orientation,mode,'span',that.charList);
-+        data.keyCode=that.getKeyAttribute(t,index,orientation,mode,'keyCode',that.charList);
-+        data.display=that.getKeyAttribute(t,index,orientation,mode,'display',that.charList);
-+        data.keyhtml=data.display&&(that.makeImg(data.display.img,data.output||" ",index)||data.display.html)||data.output;
-+        data.background=that.getKeyAttribute(t,index,orientation,mode,'background',that.charList);
-+        data.opacity=that.getKeyAttribute(t,index,orientation,mode,'opacity',that.charList);
-+        that.charList[index]=data;
-+        that.charDivs[index].firstDescendant().innerHTML=data.keyhtml;
-+        that.charDivs[index].setStyle({"background":data.background||""});
-+        that.charDivs[index].setOpacity(data.opacity);
-+        if (data.display&&data.display.img)
-+          that.charDivs[index].removeClassName("kb-text");
-+        else
-+          that.charDivs[index].addClassName("kb-text");
-+      }
-+    });
-+  }
-+
 +  var newWidth;
-+  this.charList.each(function(c){
-+    that.maybeSetDiv(c.index,c.keyCode);
-+    if (c.span) {
-+      newWidth = c.span * 10 + "%";
++  var c;
++  var div;
++  var span;
++  var tag;
++  var keyCode;
++  var background
++
++  for (var i=0; i<40; i++){
++    c=this.charList[i];
++    div=this.charDivs[i];
++    span=c[mode]&&c[mode].span||c.normal.span||1;
++    keyCode=c[mode]&&c[mode].keyCode||c.normal.keyCode;
++    background=c[mode]&&c[mode].background||c.normal.background;
++    that.maybeSetDiv(c.index,keyCode);
++    newWidth = span * 10 + "%";
++
++    tag = this.charList[i].normal.div.tagName;
++    if (this.charList[i][mode]&&this.charList[i][mode].div) {
++      if (this.mode&&this.charList[i][this.mode]&&this.charList[i][this.mode].div) {
++        this.charList[i][this.mode].div.hide();
++      }
++      this.charList[i][mode].div.show();
++    }
++
++    div.setStyle({"background":background||""});
++    if (tag && tag === "IMG") {
++      div.removeClassName("kb-text");
 +    }
 +    else {
-+      newWidth="10%";
++      div.addClassName("kb-text");
 +    }
-+    that._getMatching(that.charPicker,c.index).setStyle({"width":newWidth});
-+  });
-+  console.log("list updated");
++    div.setStyle({"width":newWidth});
++  }
++
++  this.mode=mode;
++
++  if (this.scrollEnabled)
++    this.toggleKey(this.symIdx,"on");
 +},
 +
 +/* oskb */
@@ -424,6 +463,136 @@ index 4307893..170dfe8 100644
 +if (themeTable) {
 +  this.themeObject = Mojo.parseJSON(themeTable);
 +}
++
++console.log("load theme " + this.theme + " layout " + this.layout);
++var that=this;
++var orientations=["portrait","landscape"];
++var modes=["normal","function","shift"];
++var index;
++var data;
++var t;
++var i=0;
++var x=0;
++var display;
++var output;
++var img;
++var html;
++var keydiv;
++var keyCode;
++var background;
++var span;
++var normal;
++var func;
++var shift;
++var layout;
++this.themeList=[];
++
++if (!this.themeObject) {
++  return;
++}
++
++  i=0;
++  that.defaultList.each(function(c){
++    that.testDivs[i].innerHTML="";
++    t=that.themeObject[x];
++    if (t&&(t.index>=i)&&(t.index<that.defaultList.length)&&(i===t.index)){
++      x++;
++      if (t[that.layout])
++        layout=that.layout;
++      else
++        layout='portrait';
++      if (t[layout]&&t[layout]['normal']) {
++        keyCode=t[layout]['normal'].keyCode;
++        output=t[layout]['normal'].output;
++        display=t[layout]['normal'].display;
++        background=t[layout]['normal'].background;
++        span=t[layout]['normal'].span;
++      }
++      normal = {
++        keyCode:keyCode || c.normal.keyCode,
++        output:output || c.normal.output,
++        div:that.generateKeyElement(display&&display.img,display&&display.html,output,i) || c.normal.div,
++        ondiv:display&&display.onimg&&that.generateKeyElement(display.onimg,display.html,output,i),
++        lockdiv:display&&display.lockimg&&that.generateKeyElement(display.lockimg,display.html,output,i),
++        background:background || "",
++        span:span || c.normal.span
++      }
++      if (t[layout]['function']) {
++        display=t[layout]['function'].display||{img:null,html:null};
++        func = {
++          keyCode:t[layout]['function'].keyCode,
++          output:t[layout]['function'].output,
++          div:that.generateKeyElement(display.img,display.html,t[layout]['function'].output,i),
++          background:t[layout]['function'].background,
++          span:t[layout]['function'].span
++        };
++      }
++      else if (c['function']) {
++        func = {
++          output:c['function'].output
++        };
++      }
++      else {
++        func = null;
++      }
++      if (t[layout]['shift']) {
++        display=t[layout]['shift'].display||{img:null,html:null};
++        shift = {
++          keyCode:t[layout]['shift'].keyCode,
++          output:t[layout]['shift'].output,
++          div:that.generateKeyElement(display.img,display.html,t[layout]['shift'].output,i),
++          background:t[layout]['shift'].background,
++          span:t[layout]['shift'].span
++        };
++      }
++      else if (c['shift']) {
++        shift = {
++          output:c['shift'].output
++        };
++      }
++      else {
++        shift = null;
++      }
++    }
++    else {
++      normal=c.normal;
++      func=c['function'];
++      shift=c['shift'];
++    }
++
++    data = {
++      index:i,
++      normal:normal,
++      'function':func,
++      shift:shift
++    }
++    that.themeList.push(data);
++    data.normal.div.hide();
++    data.normal.div.id="normal-"+i;
++    that.testDivs[i].insert(data.normal.div);
++    if (data.normal.ondiv) {
++      data.normal.ondiv.hide();
++      data.normal.ondiv.id="on-"+i;
++      that.testDivs[i].insert(data.normal.ondiv);
++    }
++    if (data.normal.lockdiv) {
++      data.normal.lockdiv.hide();
++      data.normal.lockdiv.id="lock-"+i;
++      that.testDivs[i].insert(data.normal.lockdiv);
++    }
++    if (data['function']&&data['function'].div) {
++      data['function'].div.hide();
++      data['function'].div.id="function-"+i;
++      that.testDivs[i].insert(data['function'].div);
++    }
++    if (data['shift']&&data['shift'].div) {
++      data['shift'].div.hide();
++      data['shift'].div.id="shift-"+i;
++      that.testDivs[i].insert(data['shift'].div);
++    }
++    i++;
++  });
++this.charList=this.themeList;
 +},
 +
 +/* oskb */
@@ -434,27 +603,63 @@ index 4307893..170dfe8 100644
 +var table;
 +var keyDesc;
 +var display;
++var html;
++var normal;
++var func;
++var shift;
 +
-+this.charList=[];
++this.themeList={};
++this.defaultList=[];
 +table=this.localizedTableFull;
 +
 +table.each(function(c){
 +  keyDesc=c.portrait.normal;  
 +  display=keyDesc.display;
++  html=display&&display.html;
++  normal = {
++    keyCode:c.portrait.normal.keyCode,
++    output:c.portrait.normal.output,
++    div:that.generateKeyElement(null,html,c.portrait.normal.output,i),
++    background:c.portrait.normal.background,
++    span:c.portrait.normal.span
++  };
++  if (c.portrait['function']) {
++    func = {
++      keyCode:c.portrait['function'].keyCode,
++      output:c.portrait['function'].output,
++      div:that.generateKeyElement(null,html,c.portrait['function'].output,i),
++      background:c.portrait['function'].background,
++      span:c.portrait['function'].span
++    };
++  }
++  else {
++    func = null;
++  }
++  if (c.portrait['shift']) {
++    shift = {
++      keyCode:c.portrait['shift'].keyCode,
++      output:c.portrait['shift'].output,
++      div:that.generateKeyElement(null,html,c.portrait['shift'].output,i),
++      background:c.portrait['shift'].background,
++      span:c.portrait['shift'].span
++    };
++  }
++  else {
++    shift = null;
++  }
++
 +  data={
 +    index:i,
-+    keyCode:keyDesc.keyCode,
-+    portrait:c.portrait,
-+    landscape:c.landscape,
-+    display:display,
-+    keyhtml:display&&(display.img||display.html)||keyDesc.output,
-+    output:keyDesc.output||"",
-+    span:keyDesc.span,
++    normal:normal,
++    'function':func,
++    shift:shift,
++    keyhtml:html||keyDesc.output,
 +    subclass:"kb-text"
 +  };
-+  that.charList.push(data);
++  that.defaultList.push(data);
 +  i++;
 +});
++this.charList=this.defaultList;
 +},
 +
 +/* oskb */
@@ -578,15 +783,17 @@ index 4307893..170dfe8 100644
 +var that=this;
 +var data;
 +this.charDivs=[];
++this.testDivs=[];
 +this.charList.each(function(c){
 +  data=that.controller.get(that.divPrefix+"-"+c.index);
 +  that.charDivs.push(data);
++  that.testDivs.push(data.descendants()[0]);
 +});
 +
 +/* Adjust the width based on the span number */
 +for (var i=0; i<40; i++) {
-+  if (this.charList[i].span) {
-+    var newWidth = this.charList[i].span * 10 + "%";
++  if (this.charList[i]['normal'].span) {
++    var newWidth = this.charList[i]['normal'].span * 10 + "%";
 +    this._getMatching(this.charPicker,i).setStyle({"width":newWidth});
 +  }
 +}
@@ -599,6 +806,27 @@ index 4307893..170dfe8 100644
 +}
 +
 +this.loadTheme();
++/*
++for (var i=0; i<40; i++) {
++  this.testDivs[i].innerHTML="";
++  if (this.charList[i]['normal']&&this.charList[i]['normal'].div){
++    this.charList[i]['normal'].div.hide();
++    this.charList[i]['normal'].div.id="normal-"+i;
++    this.testDivs[i].insert(this.charList[i]['normal'].div);
++  }
++  if (this.charList[i]['function']&&this.charList[i]['function'].div){
++    this.charList[i]['function'].div.hide();
++    this.charList[i]['function'].div.id="function-"+i;
++    this.testDivs[i].insert(this.charList[i]['function'].div);
++  }
++  if (this.charList[i]['shift']&&this.charList[i]['shift'].div){
++    this.charList[i]['shift'].div.hide();
++    this.charList[i]['shift'].div.id="shift-"+i;
++    this.testDivs[i].insert(this.charList[i]['shift'].div);
++  }
++}
++*/
++
 +this.updateList(this.layout,"normal");
 +if(this._selectedIdxElem()){
 +this.perLine=Math.floor(Element.getWidth(this.charPicker)/Element.getWidth(this._selectedIdxElem()));
@@ -705,23 +933,35 @@ index 4307893..170dfe8 100644
 +
 +  switch (mode) {
 +    case "off":
-+      if (c && c.display && c.display.img && div && div.firstDescendant())
-+        div.firstDescendant().innerHTML=this.makeImg(c.display.img,c.output,index);
++      if (c.normal.ondiv)
++        c.normal.ondiv.hide();
++      if (c.normal.lockdiv)
++        c.normal.lockdiv.hide();
++      c.normal.div.show();
 +      div.removeClassName("kb-char-on");
 +      div.removeClassName("kb-char-lock");
 +      break;
 +    case "on":
-+      if (c && c.display && c.display.onimg && div && div.firstDescendant()) {
-+        div.firstDescendant().innerHTML=this.makeImg(c.display.onimg,c.output,index);
++      if (c.normal.ondiv) {
++        c.normal.div.hide();
++        if (c.normal.lockdiv)
++          c.normal.lockdiv.hide();
++        c.normal.ondiv.show();
 +      }
-+      else
++      else {
 +        div.addClassName("kb-char-on");
++      }
 +      break;
 +    case "lock":
-+      if (c && c.display && c.display.lockimg && div && div.firstDescendant())
-+        div.firstDescendant().innerHTML=this.makeImg(c.display.lockimg,c.output,index);
-+      else
++      if (c.normal.lockdiv) {
++        c.normal.div.hide();
++        if (c.normal.ondiv)
++          c.normal.ondiv.hide();
++        c.normal.lockdiv.show();
++      }
++      else {
 +        div.addClassName("kb-char-lock");
++      }
 +      break;
 +  }
 +},
@@ -790,6 +1030,7 @@ index 4307893..170dfe8 100644
 +/* oskb */
 +exitSelector:function(chr){
 +var letter;
++var keyCode;
 +var characterVal,selection;
 +var tagName=this.target.tagName;
 +var selectionStart,selectionEnd;
@@ -800,17 +1041,19 @@ index 4307893..170dfe8 100644
 +}
 +
 +if(chr){
-+letter=chr.output || "";
++letter=chr[this.mode]&&chr[this.mode].output || chr['normal'].output || "";
++keyCode=chr[this.mode]&&chr[this.mode].keyCode || chr['normal'].keyCode;
 +
 +selection=this.controller.window.getSelection();
 +
-+if (chr.keyCode === 0 && !this.scrollEnabled) {
++if (keyCode === 1 && !this.scrollEnabled) {
 +  this.dragEnabled = true;
-+  this.toggleKey(this.dragIdx,'lock');
++  this.toggleKey(this.dragIdx,'on');
 +  return;
 +}
-+else if (chr.keyCode === 1) {
++else if (keyCode === 2) {
 +  if (!this.themeSelector) {
++    console.log("themIdx " + this.themeIdx);
 +    this.themeSelector=this.controller.scene.popupSubmenu({
 +    onChoose:this.popupChoose.bind(this),
 +    placeNear:this.charDivs[this.themeIdx],
@@ -819,10 +1062,10 @@ index 4307893..170dfe8 100644
 +  });
 +}
 +}
-+else if (Mojo.Char.isDeleteKey(chr.keyCode)) {
++else if (Mojo.Char.isDeleteKey(keyCode)) {
 +  this.controller.document.execCommand("Delete");
 +}
-+else if (chr.keyCode === Mojo.Char.altKey) {
++else if (keyCode === Mojo.Char.altKey) {
 +  if (this.shiftState !== this.SHIFT_OFF) {
 +    this.shiftState = this.SHIFT_OFF;
 +    this.toggleKey(this.shiftIdx,"off");
@@ -830,7 +1073,7 @@ index 4307893..170dfe8 100644
 +  this.handleFunc();
 +  return;
 +}
-+else if (chr.keyCode === Mojo.Char.shift) {
++else if (keyCode === Mojo.Char.shift) {
 +  if (this.funcState !== this.FUNC_OFF) {
 +    this.funcState = this.FUNC_OFF;
 +    this.toggleKey(this.funcIdx,"off");
@@ -838,12 +1081,12 @@ index 4307893..170dfe8 100644
 +  this.handleShift();
 +  return;
 +}
-+else if (this.isSymKey(chr.keyCode)) {
++else if (this.isSymKey(keyCode)) {
 +  /* TODO: is this really the only way to dynamically start/stop scrolling? */
 +  this.scrollEnabled = !this.scrollEnabled;
 +  this.renderWidget();
 +  if (this.scrollEnabled) {
-+    this.toggleKey(this.symIdx,'lock');
++    this.toggleKey(this.symIdx,"lock");
 +  }
 +  else {
 +    this.toggleKey(this.symIdx,"off");
@@ -851,8 +1094,8 @@ index 4307893..170dfe8 100644
 +  
 +  return;
 +}
-+else if (!this.isSupported(chr.keyCode)) {
-+  console.log("Char keycode " + chr.keyCode + " not supported (yet)");
++else if (!this.isSupported(keyCode)) {
++  console.log("Char keycode " + keyCode + " not supported (yet)");
 +  return;
 +}
 +else if(selection&&selection.rangeCount>0&&selection.getRangeAt(0)){
@@ -862,9 +1105,9 @@ index 4307893..170dfe8 100644
 +}
 +
 +
-+if (this.isSpecialChar(chr.keyCode)) {
-+  Mojo.Event.send(this.target,'keydown',{keyCode:chr.keyCode});
-+  Mojo.Event.send(this.target,'keyup',{keyCode:chr.keyCode});
++if (this.isSpecialChar(keyCode)) {
++  Mojo.Event.send(this.target,'keydown',{keyCode:keyCode});
++  Mojo.Event.send(this.target,'keyup',{keyCode:keyCode});
 +}
 +
 +if(this.target.mojo&&this.target.mojo.setText){
@@ -886,12 +1129,12 @@ index 4307893..170dfe8 100644
 +this.target.focus();
 +}
 +
-+if (chr && this.shiftState === this.SHIFT_ONCE && chr.keyCode !== Mojo.Char.shift){
++if (chr && this.shiftState === this.SHIFT_ONCE && keyCode !== Mojo.Char.shift){
 +  this.shiftState = this.SHIFT_OFF;
 +  this.updateList(this.layout,"normal");
 +  this.toggleKey(this.shiftIdx,"off");
 +}
-+if (chr && this.funcState === this.FUNC_ONCE && chr.keyCode !== Mojo.Char.altKey){
++if (chr && this.funcState === this.FUNC_ONCE && keyCode !== Mojo.Char.altKey){
 +  this.funcState = this.FUNC_OFF;
 +  this.updateList(this.layout,"normal");
 +  this.toggleKey(this.funcIdx,"off");
@@ -1034,7 +1277,9 @@ index 4307893..170dfe8 100644
 +
 +/* oskb */
 +handleKeyUpEvent:function(event){
++                   console.log("keyup " + event.keyCode);
 +if (event.keyCode === Mojo.Char.metaKey) {
++  console.log("leave");
 +  this.exitSelector();
 +}
 +return;
@@ -1155,8 +1400,11 @@ index 4307893..170dfe8 100644
 +
 +  var name = event.target.getAttribute('name');
 +  /*
-+  this.preview=this.controller.get(this.divPrefix+"-"+name);
++  if (!name || name === 'undefined') {
++    name = event.target.parentNode.getAttribute('name');
++  }
 +  */
++
 +  this.preview=this.charDivs[name];
 +  if (this.preview) {
 +    this.preview.addClassName("kb-selected-char");
@@ -1179,6 +1427,12 @@ index 4307893..170dfe8 100644
 +  event.stop();
 +  this.stopScroll=true;
 +  var name = event.target.getAttribute('name');
++  /*
++  if (!name || name === 'undefined') {
++    name = event.target.parentNode.getAttribute('name');
++  }
++  */
++
 +  this.preview=this.charDivs[name];
 +  /*
 +  this.preview=this.controller.get(this.divPrefix+"-"+name);
@@ -1231,6 +1485,12 @@ index 4307893..170dfe8 100644
 +  if (this.isInKeyboard(event.target)) {
 +    event.stop();
 +    var name = event.target.getAttribute('name');
++    /*
++    if (!name || name === 'undefined') {
++      name = event.target.parentNode.getAttribute('name');
++    }
++    */
++
 +    this.preview=this.charDivs[name];
 +    /*
 +    this.preview=this.controller.get(this.divPrefix+"-"+name);
@@ -6503,7 +6763,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -6594,14 +6854,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -17502,7 +17762,7 @@ index 39fa4ec..b98b50c 100644
 +}
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/stylesheets/webos-internals-virtual-keyboard.css b/usr/palm/frameworks/mojo/submissions/191.15/stylesheets/webos-internals-virtual-keyboard.css
 new file mode 100755
-index 0000000..4a0afa4
+index 0000000..41fa08d
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/stylesheets/webos-internals-virtual-keyboard.css
 @@ -0,0 +1,95 @@
@@ -17552,8 +17812,8 @@ index 0000000..4a0afa4
 +  margin-bottom: -1px;
 +  border-bottom: 1px solid #999;
 +  border-right: 1px solid #999;
-+  color: black;
-+  background: url(../images/scrim.png);
++  color: #FFF;
++  background: rgba(51,51,51,0.85);
 +}
 +
 +.kb-char-selector-element .kb-span{
