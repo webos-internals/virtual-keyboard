@@ -1,5 +1,5 @@
 diff --git a/usr/palm/frameworks/mojo/builtins/palmInitFramework191_15.js b/usr/palm/frameworks/mojo/builtins/palmInitFramework191_15.js
-index 4307893..8b8ab53 100644
+index 4307893..9b35045 100644
 --- a/usr/palm/frameworks/mojo/builtins/palmInitFramework191_15.js
 +++ b/usr/palm/frameworks/mojo/builtins/palmInitFramework191_15.js
 @@ -674,6 +674,7 @@ _Dialog:'widget_dialog',
@@ -153,7 +153,7 @@ index 4307893..8b8ab53 100644
  this.maybeSendPropertyChangeEvent(triggeringEvent);
  }
  },
-@@ -34320,6 +34365,1483 @@ return true;
+@@ -34320,6 +34365,1491 @@ return true;
  }
  return false;
  };
@@ -320,7 +320,7 @@ index 4307893..8b8ab53 100644
 +  if (!newElement) {
 +    newElement=this.controller.document.createElement('span');
 +    newElement.innerHTML=html || output;
-+    newElement.name=index;
++    newElement.setAttribute("name",index);
 +    if (html) {
 +      newElement.innerHTML="--";
 +    }
@@ -414,29 +414,40 @@ index 4307893..8b8ab53 100644
 +  var orientation = o;
 +  var mode = m;
 +  var themeObject=this.themeObject||this.localizedTableFull;
-+  var newWidth;
++  var newWidth
 +  var c;
 +  var div;
 +  var span;
 +  var tag;
 +  var keyCode;
-+  var background
++  var background;
++  var modes=["normal","function","shift"];
++  var that = this;
++  var i;
++  var length;
 +
-+  for (var i=0; i<40; i++){
-+    c=this.charList[i];
-+    div=this.charDivs[i];
++  if (this.scrollEnabled)
++    length = this.charList.length;
++  else
++    length = 40;
++
++  for (i=0; i<length; i++) {
++    c=that.charList[i];
++    div=that.charDivs[i];
 +    span=c[mode]&&c[mode].span||c.normal.span||1;
 +    keyCode=c[mode]&&c[mode].keyCode||c.normal.keyCode;
 +    background=c[mode]&&c[mode].background||c.normal.background;
 +    that.maybeSetDiv(c.index,keyCode);
 +    newWidth = span * 10 + "%";
 +
-+    tag = this.charList[i].normal.div.tagName;
-+    if (this.charList[i][mode]&&this.charList[i][mode].div) {
-+      if (this.mode&&this.charList[i][this.mode]&&this.charList[i][this.mode].div) {
-+        this.charList[i][this.mode].div.hide();
-+      }
-+      this.charList[i][mode].div.show();
++    tag = that.charList[i].normal.div.tagName;
++    if (that.charList[i][mode]&&that.charList[i][mode].div) {
++      modes.each(function(m){
++        if (that.charList[i][m] && that.charList[i][m].div) {
++          that.charList[i][m].div.hide();
++        }
++      });
++      that.charList[i][mode].div.show();
 +    }
 +
 +    div.setStyle({"background":background||""});
@@ -452,7 +463,7 @@ index 4307893..8b8ab53 100644
 +  this.mode=mode;
 +
 +  if (this.scrollEnabled)
-+    this.toggleKey(this.symIdx,"on");
++    this.toggleKey(this.symIdx,"lock");
 +},
 +
 +/* oskb */
@@ -464,7 +475,6 @@ index 4307893..8b8ab53 100644
 +  this.themeObject = Mojo.parseJSON(themeTable);
 +}
 +
-+console.log("load theme " + this.theme + " layout " + this.layout);
 +var that=this;
 +var orientations=["portrait","landscape"];
 +var modes=["normal","function","shift"];
@@ -1053,7 +1063,6 @@ index 4307893..8b8ab53 100644
 +}
 +else if (keyCode === 2) {
 +  if (!this.themeSelector) {
-+    console.log("themIdx " + this.themeIdx);
 +    this.themeSelector=this.controller.scene.popupSubmenu({
 +    onChoose:this.popupChoose.bind(this),
 +    placeNear:this.charDivs[this.themeIdx],
@@ -1277,7 +1286,6 @@ index 4307893..8b8ab53 100644
 +
 +/* oskb */
 +handleKeyUpEvent:function(event){
-+                   console.log("keyup " + event.keyCode);
 +if (event.keyCode === Mojo.Char.metaKey) {
 +  console.log("leave");
 +  this.exitSelector();
@@ -1639,7 +1647,7 @@ index 4307893..8b8ab53 100644
  
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/da_dk/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/da_dk/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/da_dk/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -1730,14 +1738,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -1883,7 +1891,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/da_dk/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/da_dk/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/da_dk/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -1974,14 +1982,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -2127,7 +2135,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/da_dk/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/da_dk/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/da_dk/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -2218,14 +2226,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -2371,7 +2379,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/de_ch/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_ch/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_ch/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -2462,14 +2470,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -2615,7 +2623,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/de_ch/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_ch/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_ch/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -2706,14 +2714,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -2859,7 +2867,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/de_ch/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_ch/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_ch/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -2950,14 +2958,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -3103,7 +3111,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/de_de/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_de/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_de/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -3194,14 +3202,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -3347,7 +3355,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/de_de/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_de/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_de/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -3438,14 +3446,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -3591,7 +3599,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/de_de/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_de/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/de_de/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -3682,14 +3690,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -3835,7 +3843,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -3926,14 +3934,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -4079,7 +4087,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -4170,14 +4178,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -4323,7 +4331,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ca/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -4414,14 +4422,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -4567,7 +4575,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_gb/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_gb/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_gb/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -4658,14 +4666,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -4811,7 +4819,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_gb/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_gb/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_gb/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -4902,14 +4910,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -5055,7 +5063,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_gb/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_gb/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_gb/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -5146,14 +5154,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -5299,7 +5307,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ie/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ie/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ie/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -5390,14 +5398,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -5543,7 +5551,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ie/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ie/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ie/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -5634,14 +5642,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -5787,7 +5795,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ie/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ie/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_ie/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -5878,14 +5886,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -6031,7 +6039,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_pl/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_pl/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_pl/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -6122,14 +6130,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -6275,7 +6283,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_pl/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_pl/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_pl/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -6366,14 +6374,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -6519,7 +6527,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_pl/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_pl/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_pl/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -6610,14 +6618,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -7007,7 +7015,7 @@ index 0000000..b5e4e77
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -7098,14 +7106,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -7251,7 +7259,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/en_us/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -7342,14 +7350,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -7495,7 +7503,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/es_es/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_es/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_es/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -7586,14 +7594,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -7739,7 +7747,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/es_es/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_es/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_es/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -7830,14 +7838,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -7983,7 +7991,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/es_es/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_es/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_es/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -8074,14 +8082,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -8227,7 +8235,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/es_mx/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_mx/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_mx/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -8318,14 +8326,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -8471,7 +8479,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/es_mx/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_mx/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_mx/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -8562,14 +8570,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -8715,7 +8723,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/es_mx/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_mx/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_mx/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -8806,14 +8814,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -8959,7 +8967,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/es_us/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_us/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_us/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -9050,14 +9058,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -9203,7 +9211,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/es_us/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_us/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_us/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -9294,14 +9302,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -9447,7 +9455,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/es_us/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_us/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/es_us/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -9538,14 +9546,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -9691,7 +9699,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fi_fi/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fi_fi/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fi_fi/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -9782,14 +9790,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -9935,7 +9943,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fi_fi/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fi_fi/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fi_fi/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -10026,14 +10034,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -10179,7 +10187,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fi_fi/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fi_fi/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fi_fi/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -10270,14 +10278,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -10423,7 +10431,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ca/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ca/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ca/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -10514,14 +10522,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -10667,7 +10675,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ca/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ca/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ca/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -10758,14 +10766,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -10911,7 +10919,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ca/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ca/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ca/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -11002,14 +11010,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -11155,7 +11163,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ch/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ch/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ch/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -11246,14 +11254,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -11399,7 +11407,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ch/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ch/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ch/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -11490,14 +11498,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -11643,7 +11651,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ch/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ch/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_ch/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -11734,14 +11742,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -11887,7 +11895,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_fr/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_fr/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_fr/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -11978,14 +11986,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -12131,7 +12139,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_fr/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_fr/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_fr/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -12222,14 +12230,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -12375,7 +12383,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_fr/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_fr/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/fr_fr/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -12466,14 +12474,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -12619,7 +12627,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/it_it/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/it_it/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/it_it/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -12710,14 +12718,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -12863,7 +12871,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/it_it/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/it_it/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/it_it/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -12954,14 +12962,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -13107,7 +13115,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/it_it/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/it_it/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/it_it/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -13198,14 +13206,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -13351,7 +13359,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/nb_no/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/nb_no/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/nb_no/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -13442,14 +13450,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -13595,7 +13603,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/nb_no/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/nb_no/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/nb_no/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -13686,14 +13694,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -13839,7 +13847,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/nb_no/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/nb_no/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/nb_no/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -13930,14 +13938,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -14083,7 +14091,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/nl_nl/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/nl_nl/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/nl_nl/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -14174,14 +14182,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -14327,7 +14335,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/nl_nl/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/nl_nl/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/nl_nl/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -14418,14 +14426,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -14571,7 +14579,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/nl_nl/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/nl_nl/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/nl_nl/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -14662,14 +14670,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -14815,7 +14823,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/pl_pl/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/pl_pl/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/pl_pl/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -14906,14 +14914,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -15059,7 +15067,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/pl_pl/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/pl_pl/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/pl_pl/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -15150,14 +15158,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -15303,7 +15311,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/pl_pl/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/pl_pl/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/pl_pl/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -15394,14 +15402,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -15547,7 +15555,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_br/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_br/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_br/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -15638,14 +15646,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -15791,7 +15799,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_br/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_br/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_br/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -15882,14 +15890,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -16035,7 +16043,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_br/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_br/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_br/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -16126,14 +16134,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -16279,7 +16287,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_pt/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_pt/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_pt/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -16370,14 +16378,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -16523,7 +16531,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_pt/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_pt/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_pt/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -16614,14 +16622,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -16767,7 +16775,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_pt/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_pt/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/pt_pt/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -16858,14 +16866,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -17011,7 +17019,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/sv_se/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/sv_se/kbchars_fulltable.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/sv_se/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
@@ -17102,14 +17110,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -17255,7 +17263,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/sv_se/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/sv_se/kbchars_fulltable_azerty.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/sv_se/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
@@ -17346,14 +17354,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
@@ -17499,7 +17507,7 @@ index 0000000..57b6ac2
 +]
 diff --git a/usr/palm/frameworks/mojo/submissions/191.15/resources/sv_se/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/191.15/resources/sv_se/kbchars_fulltable_qwertz.json
 new file mode 100644
-index 0000000..57b6ac2
+index 0000000..b5e4e77
 --- /dev/null
 +++ b/usr/palm/frameworks/mojo/submissions/191.15/resources/sv_se/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
@@ -17590,14 +17598,14 @@ index 0000000..57b6ac2
 +             "function":{"output":"_"}}},
 +{"portrait":{"normal":{"keyCode":81,"display":{"html":"&raquo"},"output":"\n"}}},
 +                             
-+{"portrait":{"normal":{"keyCode":00,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
 +{"portrait":{"normal":{"keyCode":16,"display":{"html":"&yen"},"span":1.5}}},
 +{"portrait":{"normal":{"keyCode":90,"output":"@"},
 +             "function":{"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":32,"output":" ","span":3}}},
 +{"portrait":{"normal":{"keyCode":190,"output":"."}}},
 +{"portrait":{"normal":{"keyCode":17,"display":{"html":"&iquest"},"span":1.5}}},
-+{"portrait":{"normal":{"keyCode":01,"display":{"html":"&deg"}}}},
++{"portrait":{"normal":{"keyCode":02,"display":{"html":"&deg"}}}},
 +                             
 +{"portrait":{"normal":{"keyCode":48,"output":"0"}}},
 +{"portrait":{"normal":{"keyCode":49,"output":"1"}}},
