@@ -14,12 +14,21 @@ fi
 while read i
 do
   file=/`echo $i | awk -F* '{print $2}'`
+  if [ ! -e $file ]
+  then
+    echo "ERROR: Framework file cannot be found: $file"
+    echo "List of mojo builtins files:"
+    ls /usr/palm/frameworks/mojo/builtins/
+    /usr/bin/ipkg -o /var remove org.webosinternals.virtual-keyboard
+    exit 1
+  fi
   expected=`echo $i | awk '{print $1}'`
   calculated=`md5sum $file | awk '{print $1}'`
-  PALM_FILES+="$file "
   if [ "$expected" != "$calculated" ]
   then
-    echo "ERROR: mismatch md5sums, aborting..."
+    echo "ERROR: mismatch md5sums"
+    echo "       expected: $expected"
+    echo "       calculated: $calculated"
     /usr/bin/ipkg -o /var remove org.webosinternals.virtual-keyboard
     exit 1
   fi
