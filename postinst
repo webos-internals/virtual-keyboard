@@ -16,6 +16,7 @@ do
   file=/`echo $i | awk -F* '{print $2}'`
   expected=`echo $i | awk '{print $1}'`
   calculated=`md5sum $file | awk '{print $1}'`
+  PALM_FILES+="$file "
   if [ "$expected" != "$calculated" ]
   then
     echo "ERROR: mismatch md5sums, aborting..."
@@ -27,13 +28,21 @@ done < ${APP_DIR}/md5sums
 cd / && /var/usr/bin/patch -p1 --dry-run < ${APP_DIR}/patches/add-onscreen-keyboard.patch
 if [ $? -ne 0 ]
 then
-  echo "ERROR: patch command would fail, aborting..."
+  echo "ERROR: patch dryrun failed, aborting..."
   /usr/bin/ipkg -o /var remove org.webosinternals.virtual-keyboard
   exit 1
 fi
 
-# dry-run passed, so patch for real
-/var/usr/bin/patch -p1 < ${APP_DIR}/patches/add-onscreen-keyboard.patch
+# dry-run passed, so patch for real and create backups
+/var/usr/bin/patch -p1 -b < ${APP_DIR}/patches/add-onscreen-keyboard.patch
+
+# create md5sums of all patched files, for future removal verifications
+rm -f ${APP_DIR}/md5sums.patched
+touch ${APP_DIR}/md5sums.patched
+for i in `grep diff ${APP_DIR}/patches/add-onscreen-keyboard.patch | awk '{print $3}' | sed -e 's/.//'`
+do
+  md5sum $i >> ${APP_DIR}/md5sums.patched
+done
 
 # Default themes, sounds and config
 if [ ! -d ${MEDIA_BASE} ]

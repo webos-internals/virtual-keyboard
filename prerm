@@ -3,7 +3,40 @@ MEDIA_BASE=/media/internal/virtual-keyboard
 THEMES="themes/remix_ice themes/remix_classic themes/remix_glossy themes/LPC_Dark_Rounded_2e"
 SOUNDS=sounds/click1.wav
 
-cd / && /var/usr/bin/patch -p1 -R < /var/usr/palm/applications/org.webosinternals.virtual-keyboard/patches/add-onscreen-keyboard.patch
+#cd / && /var/usr/bin/patch -p1 -R < /var/usr/palm/applications/org.webosinternals.virtual-keyboard/patches/add-onscreen-keyboard.patch
+
+if [ ! -e ${APP_DIR}/md5sums.patched ]
+then
+  echo "ERROR: No md5sums.patched file!?"
+  exit 1
+fi
+
+while read i
+do
+  file=`echo $i | awk '{print $2}'`
+  expected=`echo $i | awk '{print $1}'`
+  calculated=`md5sum $file | awk '{print $1}'`
+  if [ -e $file.orig ]
+  then
+    if [ ! -s $file.orig ]
+    then
+      rm -f $file.orig
+      rm -f $file
+    elif [ "$expected" = "$calculated" ]
+    then
+      rm -f $file
+      mv $file.orig $file
+    else
+      echo "WARNING: Failed to restore $file"
+      echo "         expected md5sum: $expected"
+      echo "         calculated md5sum: $calculated"
+      echo "         skipping..."
+    fi
+  else
+    echo "WARNING: Cannot find orig file $file.orig"
+    echo "         skipping..."
+  fi
+done < ${APP_DIR}/md5sums.patched
 
 for i in ${THEMES}
 do
@@ -21,4 +54,5 @@ if [ -z "$IPKG_OFFLINE_ROOT" ]; then # Defined by recent installers that also su
     /sbin/start LunaSysMgr
 fi
 
+rm -rf ${APP_DIR}/*
 exit 0
