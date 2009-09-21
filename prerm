@@ -1,6 +1,6 @@
 #!/bin/sh
 MEDIA_BASE=/media/internal/virtual-keyboard
-THEMES="themes/remix_ice themes/remix_classic themes/remix_glossy themes/LPC_Rounded_2d"
+THEMES="themes/remix_ice themes/remix_classic themes/remix_glossy themes/LPC_Dark_Rounded_2e"
 SOUNDS=sounds/click1.wav
 
 cd / && /var/usr/bin/patch -p1 -R < /var/usr/palm/applications/org.webosinternals.virtual-keyboard/patches/add-onscreen-keyboard.patch

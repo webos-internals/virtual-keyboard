@@ -1,11 +1,13 @@
 #!/bin/sh
 APP_DIR=/var/usr/palm/applications/org.webosinternals.virtual-keyboard
 MEDIA_BASE=/media/internal/virtual-keyboard
-THEMES="themes/remix_ice themes/remix_classic themes/remix_glossy themes/LPC_Rounded_2d"
+THEMES="themes/remix_ice themes/remix_classic themes/remix_glossy themes/LPC_Dark_Rounded_2e"
 SOUNDS=sounds/click1.wav
 
 if [ ! -e ${APP_DIR}/md5sums ]
 then
+  /usr/bin/ipkg -o /var remove org.webosinternals.virtual-keyboard
+  echo "ERROR: md5sums file missing, aborting..."
   exit 1
 fi
 
@@ -16,16 +18,22 @@ do
   calculated=`md5sum $file | awk '{print $1}'`
   if [ "$expected" != "$calculated" ]
   then
-    echo "ERROR: mismatch md5sums"
+    echo "ERROR: mismatch md5sums, aborting..."
+    /usr/bin/ipkg -o /var remove org.webosinternals.virtual-keyboard
     exit 1
   fi
 done < ${APP_DIR}/md5sums
 
-cd / && /var/usr/bin/patch -p1 < ${APP_DIR}/patches/add-onscreen-keyboard.patch
+cd / && /var/usr/bin/patch -p1 --dry-run < ${APP_DIR}/patches/add-onscreen-keyboard.patch
 if [ $? -ne 0 ]
 then
+  echo "ERROR: patch command would fail, aborting..."
+  /usr/bin/ipkg -o /var remove org.webosinternals.virtual-keyboard
   exit 1
 fi
+
+# dry-run passed, so patch for real
+/var/usr/bin/patch -p1 < ${APP_DIR}/patches/add-onscreen-keyboard.patch
 
 # Default themes, sounds and config
 if [ ! -d ${MEDIA_BASE} ]
