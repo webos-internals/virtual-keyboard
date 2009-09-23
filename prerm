@@ -1,7 +1,7 @@
 #!/bin/sh
 APP_DIR=/var/usr/palm/applications/org.webosinternals.virtual-keyboard
 PATCH_NAME=add-onscreen-keyboard.patch
-FILE_LIST=`diffstat -p0 -l $APP_DIR/$PATCH_NAME`
+FILE_LIST=`/var/usr/bin/diffstat -p1 -l $APP_DIR/$PATCH_NAME`
 PATCH_CONTROL_DIR=/var/usr/lib/.webosinternals.patches
 
 do_failure() {
@@ -14,17 +14,30 @@ do_failure() {
 
 for i in $FILE_LIST
 do
-  orig_md5sum=`md5sum $i.webosinternals.orig | awk '{print $1}'`
-  file_md5sum=`md5sum $i | awk '{print $1}'`
-  if [ "$orig_md5sum" = "$file_md5sum" ]
+  file=/$i
+  orig_md5sum=`md5sum $file.webosinternals.orig | awk '{print $1}'`
+  file_md5sum=""
+
+  if [ -e $file ]
   then
-    rm -f $i.webosinternals.orig
-    tmpvar=`echo $i | tr '/' '.'`
+    file_md5sum=`md5sum $file | awk '{print $1}'`
+  fi
+
+  if [ ! -e $file ] && [ ! -s $file.webosinternals.orig ] || [ "$orig_md5sum" = "$file_md5sum" ]
+  then
+    rm -f $file.webosinternals.orig
+    tmpvar=`echo $file | tr '/' '.'`
     sed -i -e /$tmpvar/d $PATCH_CONTROL_DIR/backups
+  fi
+
+  if [ ! -e $file ] && [ ! -s $file.webosinternals.orig ]
+  then
+    rm -f $file.webosinternals.orig
   fi
 done
 
 rm -f $PATCH_CONTROL_DIR/$PATCH_NAME
+sed -i -e /`basename $APP_DIR`/d $PATCH_CONTROL_DIR/packages
 echo "SUCCESS"
 
 # Restart Luna

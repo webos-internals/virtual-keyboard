@@ -3,7 +3,7 @@ APP_DIR=/var/usr/palm/applications/org.webosinternals.virtual-keyboard
 PATCH_NAME=add-onscreen-keyboard.patch
 DBG_ECHO=echo
 PACKAGE_REMOVE='ipkg -o /var remove $PATCH_NAME'
-FILE_LIST=`diffstat -p0 -l $APP_DIR/$PATCH_NAME`
+FILE_LIST=`/var/usr/bin/diffstat -p1 -l $APP_DIR/$PATCH_NAME`
 IPKG_INFO_DIR=/usr/lib/ipkg/info
 PATCH_CONTROL_DIR=/var/usr/lib/.webosinternals.patches
 
@@ -34,16 +34,17 @@ touch $PATCH_CONTROL_DIR/tmp || do_failure
 
 for i in $FILE_LIST
 do
-  if [ `grep -l $i $IPKG_INFO_DIR/*.md5sums | wc -l` -gt 1 ]
+  file=/$i
+  if [ `grep -l $file $IPKG_INFO_DIR/*.md5sums | wc -l` -gt 1 ]
   then
-    echo "ERROR: File found in multiple packages: $i"
+    echo "ERROR: File found in multiple packages: $file"
     do_failure
   fi
   
   in_list="no"
   for j in `cat $PATCH_CONTROL_DIR/backups`
   do
-    if [ "$i" = "$j" ]
+    if [ "$file" = "$j" ]
     then
       in_list="yes"
       break
@@ -54,10 +55,11 @@ do
   then
     echo "VERIFY BACKUP"
   else
-    expected=`grep -h $i $IPKG_INFO_DIR/*.md5sums | awk '{print $1}'`
+    expected=`grep -h $file $IPKG_INFO_DIR/*.md5sums | awk '{print $1}'`
+    echo "file $file"
     if [ "$expected" != "" ]
     then
-      calculated=`md5sum $i | awk '{print $1}'`
+      calculated=`md5sum $file | awk '{print $1}'`
       if [ "$expected" != "$calculated" ]
       then
         echo "ERROR: MD5SUMS do not match"
@@ -65,24 +67,24 @@ do
         echo "       calculated: $calculated"
         do_failure
       else
-        echo "NOTE: Palm md5sum found: $expected"
+        echo "NOTE: Palm md5sum found: $expected $file"
       fi
     fi
 
-    if [ -e $i.webosinternals.orig ]
+    if [ -e $file.webosinternals.orig ]
     then
-      orig_md5sum=`md5sum $i.webosinternals.orig | awk '{print $1}'`
-      file_md5sum=`md5sum $i | awk '{print $1}'`
+      orig_md5sum=`md5sum $file.webosinternals.orig | awk '{print $1}'`
+      file_md5sum=`md5sum $file | awk '{print $1}'`
       if [ "$orig_md5sum" != "$file_md5sum" ]
       then
-        echo "ERROR: Existing backup file, but md5sums do not match"
+        echo "ERROR: Existing backup file not in list, but md5sums do not match"
         echo "       backup md5sum: $orig_md5sum"
         echo "       current md5sum: $file_md5sum"
         do_failure
       fi
     fi
 
-    echo $i >> $PATCH_CONTROL_DIR/tmp
+    echo $file >> $PATCH_CONTROL_DIR/tmp
   fi
 done
 
@@ -104,7 +106,7 @@ do
   echo $i >> $PATCH_CONTROL_DIR/backups
 done
 
-#echo package name into >> $PATCH_CONTROL_DIR/packages
+basename $APP_DIR >> $PATCH_CONTROL_DIR/packages
 
 cp $APP_DIR/$PATCH_NAME $PATCH_CONTROL_DIR/$PATCH_NAME
 /var/usr/bin/patch -d / -p1 < ${APP_DIR}/$PATCH_NAME || do_failure
