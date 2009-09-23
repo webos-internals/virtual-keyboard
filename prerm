@@ -1,43 +1,43 @@
 #!/bin/sh
 APP_DIR=/var/usr/palm/applications/org.webosinternals.virtual-keyboard
+PATCH_NAME=add-onscreen-keyboard.patch
+FILE_LIST=`diffstat -p0 -l $APP_DIR/$PATCH_NAME`
+PATCH_CONTROL_DIR=/var/usr/lib/.webosinternals.patches
+
+do_failure() {
+  exit 1
+}
+
+/var/usr/bin/patch -R -p1 -d / --dry-run < ${APP_DIR}/$PATCH_NAME || do_failure
+
+/var/usr/bin/patch -R -p1 -d / < ${APP_DIR}/$PATCH_NAME
+
+for i in $FILE_LIST
+do
+  orig_md5sum=`md5sum $i.webosinternals.orig | awk '{print $1}'`
+  file_md5sum=`md5sum $i | awk '{print $1}'`
+  if [ "$orig_md5sum" = "$file_md5sum" ]
+  then
+    rm -f $i.webosinternals.orig
+    tmpvar=`echo $i | tr '/' '.'`
+    sed -i -e /$tmpvar/d $PATCH_CONTROL_DIR/backups
+  fi
+done
+
+rm -f $PATCH_CONTROL_DIR/$PATCH_NAME
+echo "SUCCESS"
+
+# Restart Luna
+if [ -z "$IPKG_OFFLINE_ROOT" ]; then # Defined by recent installers that also support flags.
+    /sbin/stop LunaSysMgr
+    /sbin/start LunaSysMgr
+fi
+
+rm -rf ${APP_DIR}/*
+
 MEDIA_BASE=/media/internal/virtual-keyboard
 THEMES="themes/remix_ice themes/remix_classic themes/remix_glossy themes/LPC_Dark_Rounded_2e"
 SOUNDS=sounds/click1.wav
-
-#cd / && /var/usr/bin/patch -p1 -R < /var/usr/palm/applications/org.webosinternals.virtual-keyboard/patches/add-onscreen-keyboard.patch
-
-if [ ! -e ${APP_DIR}/md5sums.patched ]
-then
-  echo "ERROR: No md5sums.patched file!?"
-  exit 1
-fi
-
-while read i
-do
-  file=`echo $i | awk '{print $2}'`
-  expected=`echo $i | awk '{print $1}'`
-  calculated=`md5sum $file | awk '{print $1}'`
-  if [ -e $file.orig ]
-  then
-    if [ ! -s $file.orig ]
-    then
-      rm -f $file.orig
-      rm -f $file
-    elif [ "$expected" = "$calculated" ]
-    then
-      rm -f $file
-      mv $file.orig $file
-    else
-      echo "WARNING: Failed to restore $file"
-      echo "         expected md5sum: $expected"
-      echo "         calculated md5sum: $calculated"
-      echo "         skipping..."
-    fi
-  else
-    echo "WARNING: Cannot find orig file $file.orig"
-    echo "         skipping..."
-  fi
-done < ${APP_DIR}/md5sums.patched
 
 for i in ${THEMES}
 do
@@ -49,11 +49,4 @@ do
   rm -rf ${MEDIA_BASE}/$i
 done
 
-# Restart Luna
-if [ -z "$IPKG_OFFLINE_ROOT" ]; then # Defined by recent installers that also support flags.
-    /sbin/stop LunaSysMgr
-    /sbin/start LunaSysMgr
-fi
-
-rm -rf ${APP_DIR}/*
 exit 0
