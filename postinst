@@ -39,8 +39,7 @@ do
   grep $i ${APP_DIR}/md5sums
   if [ $? -ne 0 ]
   then
-    echo "removing $i"
-    #rm -f $i
+    rm -f $i
   fi
 done
 
