@@ -57,9 +57,9 @@ fi
 # create md5sums of all patched files, for future removal verifications
 rm -f ${APP_DIR}/md5sums.patched
 touch ${APP_DIR}/md5sums.patched
-for i in `grep diff ${APP_DIR}/patches/add-onscreen-keyboard.patch | awk '{print $3}' | sed -e 's/.//'`
+for i in `/var/usr/bin/diffstat -p1 -l ${APP_DIR}/add-onscreen-keyboard.patch`
 do
-  md5sum $i >> ${APP_DIR}/md5sums.patched
+  md5sum /$i >> ${APP_DIR}/md5sums.patched
 done
 
 # Default themes, sounds and config
