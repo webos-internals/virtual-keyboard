@@ -1,6 +1,6 @@
 diff -uNrp rootfs/usr/palm/frameworks/mojo/builtins/palmInitFramework200_18.js rootfs_vkb/usr/palm/frameworks/mojo/builtins/palmInitFramework200_18.js
 --- rootfs/usr/palm/frameworks/mojo/builtins/palmInitFramework200_18.js	2009-09-14 00:12:51.000000000 -0400
-+++ rootfs_vkb/usr/palm/frameworks/mojo/builtins/palmInitFramework200_18.js	2009-09-28 22:28:38.000000000 -0400
++++ rootfs_vkb/usr/palm/frameworks/mojo/builtins/palmInitFramework200_18.js	2009-09-29 19:22:01.000000000 -0400
 @@ -704,6 +704,7 @@ _Dialog:'widget_dialog',
  Pager:null,
  Drawer:null,
@@ -177,8 +177,8 @@ diff -uNrp rootfs/usr/palm/frameworks/mojo/builtins/palmInitFramework200_18.js r
 +/* oskb */
 +initialize:function(){
 +this.VIRT_KB_MEDIA_PATH='/media/internal/virtual-keyboard/';
-+this.VIRT_KB_THEMES_PATH=this.VIRT_KB_MEDIA_PATH + 'themes/';
-+this.VIRT_KB_SOUNDS_PATH=this.VIRT_KB_MEDIA_PATH + 'sounds/';
++this.VIRT_KB_THEMES_PATH=this.VIRT_KB_MEDIA_PATH + '.themes/';
++this.VIRT_KB_SOUNDS_PATH=this.VIRT_KB_MEDIA_PATH + '.sounds/';
 +this.VIRT_KB_OPEN=0;
 +this.VIRT_KB_FILTERING_STATE=1;
 +this.VIRT_KB_CLOSED=2;
@@ -17627,6 +17627,7 @@ diff -uNrp rootfs/usr/palm/frameworks/mojo/submissions/200.18/stylesheets/global
  
  a {
    color: #00c;
+Binary files rootfs/usr/palm/frameworks/mojo/submissions/200.18/stylesheets/.global.css.swp and rootfs_vkb/usr/palm/frameworks/mojo/submissions/200.18/stylesheets/.global.css.swp differ
 diff -uNrp rootfs/usr/palm/frameworks/mojo/submissions/200.18/stylesheets/webos-internals-virtual-keyboard.css rootfs_vkb/usr/palm/frameworks/mojo/submissions/200.18/stylesheets/webos-internals-virtual-keyboard.css
 --- rootfs/usr/palm/frameworks/mojo/submissions/200.18/stylesheets/webos-internals-virtual-keyboard.css	1969-12-31 19:00:00.000000000 -0500
 +++ rootfs_vkb/usr/palm/frameworks/mojo/submissions/200.18/stylesheets/webos-internals-virtual-keyboard.css	2009-09-28 22:28:38.000000000 -0400
