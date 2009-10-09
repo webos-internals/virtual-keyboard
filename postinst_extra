@@ -1,7 +1,7 @@
 #!/bin/sh
 MEDIA_BASE=/media/internal/virtual-keyboard
-THEMES="themes/remix_ice themes/remix_classic themes/remix_glossy themes/LPC_Dark_Rounded_2e"
-SOUNDS=sounds/click1.wav
+THEMES=".themes/remix_ice .themes/remix_classic .themes/remix_glossy .themes/LPC_Dark_Rounded_2e"
+SOUNDS=.sounds/click1.wav
 
 # Default themes, sounds and config
 if [ ! -d ${MEDIA_BASE} ]
@@ -9,10 +9,10 @@ then
   rm -rf ${MEDIA_BASE}
   mv ${APP_DIR}/virtual-keyboard ${MEDIA_BASE}
 else
-  if [ ! -d ${MEDIA_BASE}/themes ]
+  if [ ! -d ${MEDIA_BASE}/.themes ]
   then
-    rm -rf ${MEDIA_BASE}/themes
-    mv ${APP_DIR}/virtual-keyboard/themes ${MEDIA_BASE}/themes
+    rm -rf ${MEDIA_BASE}/.themes
+    mv ${APP_DIR}/virtual-keyboard/.themes ${MEDIA_BASE}/.themes
   else
     for i in ${THEMES}
     do
@@ -21,10 +21,10 @@ else
     done
   fi
 
-  if [ ! -d ${MEDIA_BASE}/sounds ]
+  if [ ! -d ${MEDIA_BASE}/.sounds ]
   then
-    rm -rf ${MEDIA_BASE}/sounds
-    mv ${APP_DIR}/virtual-keyboard/sounds ${MEDIA_BASE}/sounds
+    rm -rf ${MEDIA_BASE}/.sounds
+    mv ${APP_DIR}/virtual-keyboard/.sounds ${MEDIA_BASE}/.sounds
   else
     for i in ${SOUNDS}
     do
