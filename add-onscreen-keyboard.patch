@@ -1,5 +1,5 @@
 diff --git a/usr/palm/frameworks/mojo/builtins/palmInitFramework200_18.js b/usr/palm/frameworks/mojo/builtins/palmInitFramework200_18.js
-index be0c90d..c8ff0ff 100644
+index be0c90d..96ce44f 100644
 --- a/usr/palm/frameworks/mojo/builtins/palmInitFramework200_18.js
 +++ b/usr/palm/frameworks/mojo/builtins/palmInitFramework200_18.js
 @@ -704,6 +704,7 @@ _Dialog:'widget_dialog',
@@ -1055,7 +1055,7 @@ index be0c90d..c8ff0ff 100644
 +  }
 +  else
 +  {
-+    prefix = tmpTxt[1] + delim;
++    prefix = tmpTxt[1] + ' ';
 +    word = tmpTxt[2];
 +  }
 +
