@@ -1186,7 +1186,7 @@ index ac3129f..759b419 100644
 +if(this.target.mojo&&this.target.mojo.setText){
 +selectionStart=this.target.selectionStart;
 +selectionEnd=this.target.selectionEnd;
-+this.target.mojo.setText(this.target.value);
++this.target.mojo.setText(this.target.value||this.target.mojo.value);
 +this.target.selectionStart=selectionStart;
 +this.target.selectionEnd=selectionEnd;
 +}
