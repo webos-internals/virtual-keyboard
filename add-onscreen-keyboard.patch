@@ -153,7 +153,7 @@ index ac3129f..759b419 100644
  this.maybeSendPropertyChangeEvent(triggeringEvent);
  }
  },
-@@ -36512,6 +36557,1555 @@ return true;
+@@ -36512,6 +36557,1554 @@ return true;
  }
  return false;
  };
@@ -1182,8 +1182,7 @@ index ac3129f..759b419 100644
 +  Mojo.Event.send(this.target,'keydown',{keyCode:keyCode});
 +  Mojo.Event.send(this.target,'keyup',{keyCode:keyCode});
 +}
-+
-+if(this.target.mojo&&this.target.mojo.setText){
++else if(this.target.mojo&&this.target.mojo.setText){
 +selectionStart=this.target.selectionStart;
 +selectionEnd=this.target.selectionEnd;
 +this.target.mojo.setText(this.target.value||this.target.mojo.value);
