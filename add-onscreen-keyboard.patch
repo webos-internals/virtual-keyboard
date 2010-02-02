@@ -925,7 +925,7 @@ index ac3129f..759b419 100644
 +
 +/* oskb */
 +isSpecialChar:function(keyCode){
-+  return(Mojo.Char.isEnterKey(keyCode));
++  return(Mojo.Char.isEnterKey(keyCode) || Mojo.Char.isDeleteKey(keyCode));
 +},
 +
 +/* oskb */
