@@ -26,7 +26,7 @@ index ac3129f..759b419 100644
  kSceneClassName:'palm-scene',
  kBrowserObject:'application/x-palm-browser',
  enableAltCharPicker:true,
-+enableVirtualKeyboard:true,
++enableVirtualKeyboard:true, 
  
  
  
