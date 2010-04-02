@@ -1,8 +1,8 @@
-diff --git a/usr/palm/frameworks/mojo/builtins/palmInitFramework200_72.js b/usr/palm/frameworks/mojo/builtins/palmInitFramework200_72.js
-index ac3129f..759b419 100644
---- a/usr/palm/frameworks/mojo/builtins/palmInitFramework200_72.js
-+++ b/usr/palm/frameworks/mojo/builtins/palmInitFramework200_72.js
-@@ -779,6 +779,7 @@ _Dialog:'widget_dialog',
+diff --git a/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js b/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js
+index 2db731c..f6c858f 100644
+--- a/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js
++++ b/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js
+@@ -778,6 +778,7 @@ _Dialog:'widget_dialog',
  Pager:null,
  Drawer:null,
  CharSelector:null,
@@ -10,7 +10,7 @@ index ac3129f..759b419 100644
  FilterList:null,
  _Submenu:'widget_submenu',
  ExperimentalGridList:'widget_grid',
-@@ -3939,6 +3940,11 @@ if(this.charSelector&&this.charSelector.element&&this.charSelector.element.mojo&
+@@ -4055,6 +4056,11 @@ if(this.charSelectorIsOpen()){
  return;
  }
  this.charSelector=this.createDynamicWidget('CharSelector',{selectionTarget:event.selectionTarget});
@@ -22,7 +22,7 @@ index ac3129f..759b419 100644
  }
  },
  
-@@ -4224,6 +4230,7 @@ kDefaultSceneName:'main',
+@@ -4341,6 +4347,7 @@ kDefaultSceneName:'main',
  kSceneClassName:'palm-scene',
  kBrowserObject:'application/x-palm-browser',
  enableAltCharPicker:true,
@@ -30,7 +30,7 @@ index ac3129f..759b419 100644
  
  
  
-@@ -4235,6 +4242,7 @@ this.document=this.window.document;
+@@ -4352,6 +4359,7 @@ this.document=this.window.document;
  this.paramsFromURI=this.document.baseURI.toQueryParams();
  this.stageType=this.paramsFromURI.window||"card";
  this._stageProxy=stageProxy;
@@ -38,7 +38,7 @@ index ac3129f..759b419 100644
  
  this._stagePreparing=true;
  
-@@ -5123,6 +5131,13 @@ var scene=this.topScene();
+@@ -5269,6 +5277,13 @@ var scene=this.topScene();
  var tempTextArea,msg,scriptNode;
  var webView;
  
@@ -52,7 +52,7 @@ index ac3129f..759b419 100644
  if(Mojo.Controller.isGoBackKey(event)){
  var newEv=Mojo.Event.make(Mojo.Event.back,{originalEvent:event});
  this.sendEventToCommanders(newEv);
-@@ -5143,6 +5158,16 @@ if(webView){
+@@ -5289,6 +5304,16 @@ if(webView){
  webView.mojo.isEditing(this._sendCharpickerEventCallback.bind(this,Mojo.Event.renderAltCharacters,webView,null));
  }
  }
@@ -69,7 +69,7 @@ index ac3129f..759b419 100644
  }else if(event.keyCode===Mojo.Char.o&&event.ctrlKey&&event.shiftKey&&Mojo.Config.debuggingEnabled){
  
  
-@@ -5184,8 +5209,6 @@ tempTextArea.remove();
+@@ -5330,8 +5355,6 @@ tempTextArea.remove();
  
  }else{
  
@@ -78,7 +78,7 @@ index ac3129f..759b419 100644
  scene=this.activeScene();
  if(event.metaKey&&scene&&scene.handleShortcut(String.fromCharCode(event.which),event)){
  Event.stop(event);
-@@ -5200,6 +5223,13 @@ this._forwardEventToTopContainer(Mojo.Event.keyup,event);
+@@ -5346,6 +5369,13 @@ this._forwardEventToTopContainer(Mojo.Event.keyup,event);
  _keyDownHandler:function(event){
  var webView;
  
@@ -92,7 +92,7 @@ index ac3129f..759b419 100644
  if(this.enableAltCharPicker&&event.keyCode!==Mojo.Char.sym&&event.ctrlKey){
  if(this.doesTargetAcceptKeys(event.target)){
  this._sendCharpickerEvent(Mojo.Event.renderChordedAltCharacters,event.target,event.keyCode);
-@@ -9907,6 +9937,9 @@ Mojo.Event.renderAltCharacters='mojo-altchars';
+@@ -10288,6 +10318,9 @@ Mojo.Event.renderAltCharacters='mojo-altchars';
  Mojo.Event.renderChordedAltCharacters='mojo-altchars-chorded';
  
  
@@ -102,7 +102,7 @@ index ac3129f..759b419 100644
  Mojo.Event.orientationChange='mojo-orientation';
  
  
-@@ -11222,7 +11255,7 @@ return stringTable;
+@@ -11617,7 +11650,7 @@ return stringTable;
  
  Mojo.Locale.set=function(currentLocale,formatRegion){
  var deviceInfo=Mojo.Environment.DeviceInfo;
@@ -111,29 +111,35 @@ index ac3129f..759b419 100644
  
  if(Mojo.Locale.current!=currentLocale){
  Mojo.Locale.current=currentLocale;
-@@ -11263,13 +11296,21 @@ Mojo.Locale.frameworkStrings=Mojo.Locale.readStringTable("strings.json",Mojo.Loc
- if(deviceInfo.keyboardType===Mojo.Environment.AZERTY){
+@@ -11659,10 +11692,14 @@ switch(deviceInfo.keyboardType){
+ case Mojo.Environment.AZERTY:
  altCharTable="alternatechars_table_azerty.json";
  altCharFullTable="alternatechars_fulltable_azerty.json";
 +kbCharTable="kbchars_table_azerty.json";
 +kbCharFullTable="kbchars_fulltable_azerty.json";
- }else if(deviceInfo.keyboardType===Mojo.Environment.QWERTZ){
+ break;
+ case Mojo.Environment.QWERTZ:
  altCharTable="alternatechars_table_qwertz.json";
  altCharFullTable="alternatechars_fulltable_qwertz.json";
 +kbCharTable="kbchars_table_qwertz.json";
 +kbCharFullTable="kbchars_fulltable_qwertz.json";
- }else{
+ break;
+ case Mojo.Environment.QWERTZ_ACC:
+ altCharTable="alternatechars_table_qwertz_accented.json";
+@@ -11675,8 +11712,12 @@ break;
+ default:
  altCharTable="alternatechars_table.json";
  altCharFullTable="alternatechars_fulltable.json";
 +kbCharTable="kbchars_table.json";
 +kbCharFullTable="kbchars_fulltable.json";
  }
+ 
 +Mojo.Locale.kbCharacters=Mojo.Locale.readStringTable(kbCharTable,Mojo.Locale.current,Mojo.Locale.frameworkResourcePath,altCharArrayMerge);
 +Mojo.Locale.kbCharactersFull=Mojo.Locale.readStringTable(kbCharFullTable,Mojo.Locale.current,Mojo.Locale.frameworkResourcePath,altCharArrayMerge);
  Mojo.Locale.alternateCharacters=Mojo.Locale.readStringTable(altCharTable,Mojo.Locale.current,Mojo.Locale.frameworkResourcePath,altCharArrayMerge);
  Mojo.Locale.alternateCharactersFull=Mojo.Locale.readStringTable(altCharFullTable,Mojo.Locale.current,Mojo.Locale.frameworkResourcePath,altCharArrayMerge);
  Mojo.Locale.DateTimeStrings=Mojo.Locale.readStringTable("datetime_table.json",Mojo.Locale.current,Mojo.Locale.frameworkResourcePath);
-@@ -20177,6 +20218,9 @@ return;
+@@ -21144,6 +21185,9 @@ return;
  if(Mojo.Char.isCommitKey(chr)){
  return;
  }
@@ -143,7 +149,7 @@ index ac3129f..759b419 100644
  
  switch(this.STATE){
  case this.ADDRESSING_WIDGET_FOCUSED:
-@@ -30757,7 +30801,8 @@ return false;
+@@ -31897,7 +31941,8 @@ return false;
  
  sendChanges:function(triggeringEvent){
  
@@ -153,7 +159,7 @@ index ac3129f..759b419 100644
  this.maybeSendPropertyChangeEvent(triggeringEvent);
  }
  },
-@@ -36512,6 +36557,1554 @@ return true;
+@@ -37750,6 +37795,1555 @@ return true;
  }
  return false;
  };
@@ -1123,7 +1129,8 @@ index ac3129f..759b419 100644
 +    popupClass:'palm-list-selector-popup',
 +    items:this.installed_themes.map(this.selectorChoiceToMenuItem)
 +  });
-+}
++  }
++  return;
 +}
 +else if (Mojo.Char.isDeleteKey(keyCode)) {
 +	if (this.correctedText) {
@@ -1708,11 +1715,11 @@ index ac3129f..759b419 100644
  /* Compressed by the perl version of jsmin. */
  /* JavaScript::Minifier 0.02 */
  
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/da_dk/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/da_dk/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/da_dk/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/da_dk/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/da_dk/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/da_dk/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -1952,11 +1959,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/da_dk/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/da_dk/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/da_dk/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/da_dk/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/da_dk/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/da_dk/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -2196,11 +2203,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/da_dk/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/da_dk/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/da_dk/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/da_dk/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/da_dk/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/da_dk/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -2440,11 +2447,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/de_ch/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_ch/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/de_ch/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/de_ch/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_ch/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/de_ch/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -2684,11 +2691,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/de_ch/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_ch/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/de_ch/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/de_ch/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_ch/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/de_ch/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -2928,11 +2935,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/de_ch/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_ch/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/de_ch/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/de_ch/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_ch/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/de_ch/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -3172,11 +3179,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/de_de/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_de/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/de_de/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/de_de/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_de/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/de_de/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -3416,11 +3423,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/de_de/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_de/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/de_de/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/de_de/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_de/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/de_de/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -3660,11 +3667,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/de_de/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_de/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/de_de/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/de_de/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/de_de/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/de_de/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -3904,11 +3911,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ca/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ca/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_ca/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_ca/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ca/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_ca/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -4148,11 +4155,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ca/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ca/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_ca/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_ca/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ca/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_ca/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -4392,11 +4399,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ca/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ca/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_ca/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_ca/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ca/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_ca/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -4636,11 +4643,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_gb/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_gb/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_gb/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_gb/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_gb/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_gb/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -4880,11 +4887,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_gb/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_gb/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_gb/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_gb/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_gb/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_gb/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -5124,11 +5131,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_gb/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_gb/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_gb/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_gb/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_gb/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_gb/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -5368,11 +5375,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ie/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ie/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_ie/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_ie/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ie/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_ie/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -5612,11 +5619,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ie/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ie/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_ie/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_ie/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ie/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_ie/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -5856,11 +5863,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ie/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ie/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_ie/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_ie/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_ie/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_ie/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -6100,11 +6107,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_pl/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_pl/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_pl/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_pl/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_pl/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_pl/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -6344,11 +6351,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_pl/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_pl/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_pl/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_pl/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_pl/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_pl/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -6588,11 +6595,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_pl/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_pl/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_pl/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_pl/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_pl/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_pl/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -6832,11 +6839,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_us/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_us/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_us/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_us/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_us/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_us/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -7076,11 +7083,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_us/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_us/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_us/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_us/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_us/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_us/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -7320,11 +7327,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/en_us/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_us/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/en_us/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/en_us/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/en_us/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/en_us/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -7564,11 +7571,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/es_es/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_es/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/es_es/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/es_es/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_es/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/es_es/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -7808,11 +7815,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/es_es/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_es/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/es_es/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/es_es/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_es/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/es_es/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -8052,11 +8059,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/es_es/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_es/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/es_es/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/es_es/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_es/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/es_es/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -8296,11 +8303,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/es_mx/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_mx/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/es_mx/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/es_mx/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_mx/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/es_mx/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -8540,11 +8547,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/es_mx/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_mx/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/es_mx/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/es_mx/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_mx/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/es_mx/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -8784,11 +8791,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/es_mx/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_mx/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/es_mx/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/es_mx/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_mx/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/es_mx/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -9028,11 +9035,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/es_us/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_us/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/es_us/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/es_us/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_us/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/es_us/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -9272,11 +9279,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/es_us/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_us/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/es_us/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/es_us/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_us/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/es_us/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -9516,11 +9523,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/es_us/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_us/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/es_us/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/es_us/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/es_us/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/es_us/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -9760,11 +9767,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fi_fi/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fi_fi/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fi_fi/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -10004,11 +10011,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fi_fi/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fi_fi/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fi_fi/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -10248,11 +10255,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fi_fi/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fi_fi/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fi_fi/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -10492,11 +10499,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ca/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ca/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ca/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -10736,11 +10743,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ca/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ca/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ca/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -10980,11 +10987,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ca/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ca/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ca/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -11224,11 +11231,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ch/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ch/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ch/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -11468,11 +11475,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ch/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ch/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ch/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -11712,11 +11719,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ch/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ch/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_ch/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -11956,11 +11963,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_fr/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_fr/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_fr/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -12200,11 +12207,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_fr/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_fr/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_fr/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -12444,11 +12451,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_fr/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_fr/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/fr_fr/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -12688,11 +12695,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/it_it/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/it_it/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/it_it/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/it_it/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/it_it/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/it_it/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -12932,11 +12939,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/it_it/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/it_it/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/it_it/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/it_it/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/it_it/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/it_it/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -13176,11 +13183,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/it_it/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/it_it/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/it_it/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/it_it/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/it_it/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/it_it/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -13420,11 +13427,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/nb_no/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/nb_no/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/nb_no/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/nb_no/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/nb_no/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/nb_no/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -13664,11 +13671,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/nb_no/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/nb_no/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/nb_no/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/nb_no/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/nb_no/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/nb_no/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -13908,11 +13915,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/nb_no/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/nb_no/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/nb_no/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/nb_no/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/nb_no/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/nb_no/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -14152,11 +14159,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/nl_nl/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/nl_nl/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/nl_nl/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -14396,11 +14403,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/nl_nl/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/nl_nl/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/nl_nl/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -14640,11 +14647,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/nl_nl/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/nl_nl/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/nl_nl/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -14884,11 +14891,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/pl_pl/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/pl_pl/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/pl_pl/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -15128,11 +15135,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/pl_pl/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/pl_pl/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/pl_pl/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -15372,11 +15379,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/pl_pl/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/pl_pl/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/pl_pl/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -15616,11 +15623,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_br/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_br/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/pt_br/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/pt_br/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_br/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/pt_br/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -15860,11 +15867,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_br/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_br/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/pt_br/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/pt_br/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_br/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/pt_br/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -16104,11 +16111,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_br/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_br/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/pt_br/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/pt_br/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_br/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/pt_br/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -16348,11 +16355,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_pt/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_pt/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_pt/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -16592,11 +16599,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_pt/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_pt/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_pt/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -16836,11 +16843,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_pt/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_pt/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/pt_pt/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -17080,11 +17087,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/sv_se/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/sv_se/kbchars_fulltable.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/sv_se/kbchars_fulltable.json b/usr/palm/frameworks/mojo/submissions/338/resources/sv_se/kbchars_fulltable.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/sv_se/kbchars_fulltable.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/sv_se/kbchars_fulltable.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -17324,11 +17331,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/sv_se/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/sv_se/kbchars_fulltable_azerty.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/sv_se/kbchars_fulltable_azerty.json b/usr/palm/frameworks/mojo/submissions/338/resources/sv_se/kbchars_fulltable_azerty.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/sv_se/kbchars_fulltable_azerty.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/sv_se/kbchars_fulltable_azerty.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -17568,11 +17575,11 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/resources/sv_se/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/200.72/resources/sv_se/kbchars_fulltable_qwertz.json
+diff --git a/usr/palm/frameworks/mojo/submissions/338/resources/sv_se/kbchars_fulltable_qwertz.json b/usr/palm/frameworks/mojo/submissions/338/resources/sv_se/kbchars_fulltable_qwertz.json
 new file mode 100644
 index 0000000..b5e4e77
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/resources/sv_se/kbchars_fulltable_qwertz.json
++++ b/usr/palm/frameworks/mojo/submissions/338/resources/sv_se/kbchars_fulltable_qwertz.json
 @@ -0,0 +1,238 @@
 +[
 +{"portrait":{"normal":{"keyCode":81,"output":"q"},
@@ -17812,10 +17819,10 @@ index 0000000..b5e4e77
 +{"portrait":{"normal":{"output":"£"}}},
 +{"portrait":{"normal":{"output":"¥"}}}
 +]
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/stylesheets/global.css b/usr/palm/frameworks/mojo/submissions/200.72/stylesheets/global.css
+diff --git a/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css b/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
 index 9adb28a..da7f703 100644
---- a/usr/palm/frameworks/mojo/submissions/200.72/stylesheets/global.css
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/stylesheets/global.css
+--- a/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
++++ b/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
 @@ -16,6 +16,7 @@
  @import url(global-iconography.css);
  @import url(global-widget-addressing.css);
@@ -17824,11 +17831,11 @@ index 9adb28a..da7f703 100644
  
  a {
    color: #00c;
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/stylesheets/webos-internals-virtual-keyboard.css b/usr/palm/frameworks/mojo/submissions/200.72/stylesheets/webos-internals-virtual-keyboard.css
+diff --git a/usr/palm/frameworks/mojo/submissions/338/stylesheets/webos-internals-virtual-keyboard.css b/usr/palm/frameworks/mojo/submissions/338/stylesheets/webos-internals-virtual-keyboard.css
 new file mode 100644
 index 0000000..41fa08d
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/stylesheets/webos-internals-virtual-keyboard.css
++++ b/usr/palm/frameworks/mojo/submissions/338/stylesheets/webos-internals-virtual-keyboard.css
 @@ -0,0 +1,95 @@
 +/* Styles for On Screen Keyboard */
 +
@@ -17925,44 +17932,44 @@ index 0000000..41fa08d
 +.kb-char-selector-column.landscape {
 +  width: 480px;
 +}
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char-ls.html b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char-ls.html
+diff --git a/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char-ls.html b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char-ls.html
 new file mode 100644
 index 0000000..bd0d15f
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char-ls.html
++++ b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char-ls.html
 @@ -0,0 +1,3 @@
 +<div id="#{divPrefix}-#{index}" name="#{index}" class="kb-char-selector-element #{subclass} landscape" style="background:#{background}" x-mojo-tap-highlight="momentary">
 +  <span name="#{index}" class="kb-span">#{-keyhtml}</span>
 +</div>
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char-selector-row-ls.html b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char-selector-row-ls.html
+diff --git a/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char-selector-row-ls.html b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char-selector-row-ls.html
 new file mode 100644
 index 0000000..a5a8217
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char-selector-row-ls.html
++++ b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char-selector-row-ls.html
 @@ -0,0 +1 @@
 +<div class="kb-char-selector-column landscape">#{-characters}</div>
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char-selector-row.html b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char-selector-row.html
+diff --git a/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char-selector-row.html b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char-selector-row.html
 new file mode 100644
 index 0000000..847f837
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char-selector-row.html
++++ b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char-selector-row.html
 @@ -0,0 +1 @@
 +<div class="kb-char-selector-column">#{-characters}</div>
 \ No newline at end of file
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char.html b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char.html
+diff --git a/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char.html b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char.html
 new file mode 100644
 index 0000000..e5a85de
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/char.html
++++ b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/char.html
 @@ -0,0 +1,3 @@
 +<div id="#{divPrefix}-#{index}" name="#{index}" class="kb-char-selector-element #{subclass}" style="background:#{background}" x-mojo-tap-highlight="momentary">
 +  <span name="#{index}" class="kb-span">#{-keyhtml}</span>
 +</div>
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/charselector-ls.html b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/charselector-ls.html
+diff --git a/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/charselector-ls.html b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/charselector-ls.html
 new file mode 100644
 index 0000000..84349fa
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/charselector-ls.html
++++ b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/charselector-ls.html
 @@ -0,0 +1,7 @@
 +<div  class="kb-char-selector-container landscape" id="#{divPrefix}-kb-char-selector-div">
 +  <div class="kb-char-selector-wrapper">
@@ -17971,11 +17978,11 @@ index 0000000..84349fa
 +		</div>  
 +  </div>
 +</div> 
-diff --git a/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/charselector.html b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/charselector.html
+diff --git a/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/charselector.html b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/charselector.html
 new file mode 100644
 index 0000000..0675d8d
 --- /dev/null
-+++ b/usr/palm/frameworks/mojo/submissions/200.72/templates/kbselector/charselector.html
++++ b/usr/palm/frameworks/mojo/submissions/338/templates/kbselector/charselector.html
 @@ -0,0 +1,7 @@
 +<div  class="kb-char-selector-container" id="#{divPrefix}-kb-char-selector-div">
 +  <div class="kb-char-selector-wrapper">
