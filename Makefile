@@ -1,4 +1,4 @@
-WEBOS_VERSION=1.4.2
+WEBOS_VERSION=1.4.3
 DOCTOR_DIR=/source/webos_doctors
 ROOT=${DOCTOR_DIR}/root-${WEBOS_VERSION}
 PWD=$(shell pwd)
