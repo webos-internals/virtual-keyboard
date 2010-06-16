@@ -1,5 +1,5 @@
 diff --git a/usr/palm/frameworks/mojo/builtins/palmInitFramework345.js b/usr/palm/frameworks/mojo/builtins/palmInitFramework345.js
-index 2db731c..f6c858f 100644
+index 7fa9a9c..cc818bb 100644
 --- a/usr/palm/frameworks/mojo/builtins/palmInitFramework345.js
 +++ b/usr/palm/frameworks/mojo/builtins/palmInitFramework345.js
 @@ -778,6 +778,7 @@ _Dialog:'widget_dialog',
@@ -139,7 +139,7 @@ index 2db731c..f6c858f 100644
  Mojo.Locale.alternateCharacters=Mojo.Locale.readStringTable(altCharTable,Mojo.Locale.current,Mojo.Locale.frameworkResourcePath,altCharArrayMerge);
  Mojo.Locale.alternateCharactersFull=Mojo.Locale.readStringTable(altCharFullTable,Mojo.Locale.current,Mojo.Locale.frameworkResourcePath,altCharArrayMerge);
  Mojo.Locale.DateTimeStrings=Mojo.Locale.readStringTable("datetime_table.json",Mojo.Locale.current,Mojo.Locale.frameworkResourcePath);
-@@ -21144,6 +21185,9 @@ return;
+@@ -21174,6 +21215,9 @@ return;
  if(Mojo.Char.isCommitKey(chr)){
  return;
  }
@@ -149,7 +149,7 @@ index 2db731c..f6c858f 100644
  
  switch(this.STATE){
  case this.ADDRESSING_WIDGET_FOCUSED:
-@@ -31897,7 +31941,8 @@ return false;
+@@ -31932,7 +31976,8 @@ return false;
  
  sendChanges:function(triggeringEvent){
  
@@ -159,7 +159,7 @@ index 2db731c..f6c858f 100644
  this.maybeSendPropertyChangeEvent(triggeringEvent);
  }
  },
-@@ -37750,6 +37795,1555 @@ return true;
+@@ -37785,6 +37830,1555 @@ return true;
  }
  return false;
  };
