@@ -1,7 +1,7 @@
-Only in build: media
-diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js build/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js
---- root/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js	2010-06-15 21:12:22.000000000 -0400
-+++ build/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js	2010-06-15 21:28:53.000000000 -0400
+diff --git a/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js b/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js
+index 2db731c..f64612a 100644
+--- a/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js
++++ b/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js
 @@ -778,6 +778,7 @@ _Dialog:'widget_dialog',
  Pager:null,
  Drawer:null,
@@ -69,7 +69,7 @@ diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/built
  }else if(event.keyCode===Mojo.Char.o&&event.ctrlKey&&event.shiftKey&&Mojo.Config.debuggingEnabled){
  
  
-@@ -5346,6 +5369,13 @@ this._forwardEventToTopContainer(Mojo.Ev
+@@ -5346,6 +5371,13 @@ this._forwardEventToTopContainer(Mojo.Event.keyup,event);
  _keyDownHandler:function(event){
  var webView;
  
@@ -83,7 +83,7 @@ diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/built
  if(this.enableAltCharPicker&&event.keyCode!==Mojo.Char.sym&&event.ctrlKey){
  if(this.doesTargetAcceptKeys(event.target)){
  this._sendCharpickerEvent(Mojo.Event.renderChordedAltCharacters,event.target,event.keyCode);
-@@ -10288,6 +10318,9 @@ Mojo.Event.renderAltCharacters='mojo-alt
+@@ -10288,6 +10320,9 @@ Mojo.Event.renderAltCharacters='mojo-altchars';
  Mojo.Event.renderChordedAltCharacters='mojo-altchars-chorded';
  
  
@@ -93,7 +93,7 @@ diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/built
  Mojo.Event.orientationChange='mojo-orientation';
  
  
-@@ -11617,7 +11650,7 @@ return stringTable;
+@@ -11617,7 +11652,7 @@ return stringTable;
  
  Mojo.Locale.set=function(currentLocale,formatRegion){
  var deviceInfo=Mojo.Environment.DeviceInfo;
@@ -102,7 +102,7 @@ diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/built
  
  if(Mojo.Locale.current!=currentLocale){
  Mojo.Locale.current=currentLocale;
-@@ -11659,10 +11692,14 @@ switch(deviceInfo.keyboardType){
+@@ -11659,10 +11694,14 @@ switch(deviceInfo.keyboardType){
  case Mojo.Environment.AZERTY:
  altCharTable="alternatechars_table_azerty.json";
  altCharFullTable="alternatechars_fulltable_azerty.json";
@@ -117,7 +117,7 @@ diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/built
  break;
  case Mojo.Environment.QWERTZ_ACC:
  altCharTable="alternatechars_table_qwertz_accented.json";
-@@ -11675,8 +11712,12 @@ break;
+@@ -11675,8 +11714,12 @@ break;
  default:
  altCharTable="alternatechars_table.json";
  altCharFullTable="alternatechars_fulltable.json";
@@ -130,7 +130,7 @@ diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/built
  Mojo.Locale.alternateCharacters=Mojo.Locale.readStringTable(altCharTable,Mojo.Locale.current,Mojo.Locale.frameworkResourcePath,altCharArrayMerge);
  Mojo.Locale.alternateCharactersFull=Mojo.Locale.readStringTable(altCharFullTable,Mojo.Locale.current,Mojo.Locale.frameworkResourcePath,altCharArrayMerge);
  Mojo.Locale.DateTimeStrings=Mojo.Locale.readStringTable("datetime_table.json",Mojo.Locale.current,Mojo.Locale.frameworkResourcePath);
-@@ -21144,6 +21185,9 @@ return;
+@@ -21144,6 +21187,9 @@ return;
  if(Mojo.Char.isCommitKey(chr)){
  return;
  }
@@ -140,7 +140,7 @@ diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/built
  
  switch(this.STATE){
  case this.ADDRESSING_WIDGET_FOCUSED:
-@@ -31897,7 +31941,8 @@ return false;
+@@ -31897,7 +31943,8 @@ return false;
  
  sendChanges:function(triggeringEvent){
  
@@ -150,7 +150,7 @@ diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/built
  this.maybeSendPropertyChangeEvent(triggeringEvent);
  }
  },
-@@ -37750,6 +37795,1555 @@ return true;
+@@ -37750,6 +37797,1555 @@ return true;
  }
  return false;
  };
@@ -1706,75 +1706,10 @@ diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/built
  /* Compressed by the perl version of jsmin. */
  /* JavaScript::Minifier 0.02 */
  
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/da_dk: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/da_dk: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/da_dk: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/de_ch: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/de_ch: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/de_ch: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/de_de: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/de_de: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/de_de: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_ca: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_ca: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_ca: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_gb: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_gb: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_gb: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_ie: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_ie: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_ie: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_pl: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_pl: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_pl: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_us: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_us: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/en_us: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/es_es: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/es_es: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/es_es: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/es_mx: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/es_mx: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/es_mx: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/es_us: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/es_us: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/es_us: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fi_fi: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fr_ca: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fr_ch: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/fr_fr: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/it_it: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/it_it: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/it_it: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/nb_no: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/nb_no: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/nb_no: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/nl_nl: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/pl_pl: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/pt_br: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/pt_br: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/pt_br: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/pt_pt: kbchars_fulltable_qwertz.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/sv_se: kbchars_fulltable_azerty.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/sv_se: kbchars_fulltable.json
-Only in build/usr/palm/frameworks/mojo/submissions/338/resources/sv_se: kbchars_fulltable_qwertz.json
-diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css build/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
---- root/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css	2010-06-15 21:12:24.000000000 -0400
-+++ build/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css	2010-06-15 21:28:53.000000000 -0400
+diff --git a/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css b/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
+index 9adb28a..da7f703 100644
+--- a/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
++++ b/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
 @@ -16,6 +16,7 @@
  @import url(global-iconography.css);
  @import url(global-widget-addressing.css);
@@ -1783,5 +1718,3 @@ diff -Burp -x .patch-applied -x .built-stock root/usr/palm/frameworks/mojo/submi
  
  a {
    color: #00c;
-Only in build/usr/palm/frameworks/mojo/submissions/338/stylesheets: webos-internals-virtual-keyboard.css
-Only in build/usr/palm/frameworks/mojo/submissions/338/templates: kbselector
