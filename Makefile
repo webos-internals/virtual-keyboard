@@ -1,4 +1,4 @@
-WEBOS_VERSION=1.4.0
+WEBOS_VERSION=1.4.2
 DOCTOR_DIR=/source/webos_doctors
 ROOT=${DOCTOR_DIR}/root-${WEBOS_VERSION}
 PWD=$(shell pwd)
@@ -41,7 +41,7 @@ ${ROOT}: ${DOCTOR_DIR}/webosdoctor-${WEBOS_VERSION}.jar
 		tar -C $@ -m -z -x -f - ./usr; \
 	fi
 	@rm -f `find $@ -type l`
-	@cd $@ && git init && echo "files.aupt" > .gitignore && git add . && git commit -a -m"Initial Commit" && git tag stock
+	@cd $@ && git init && echo "files.aupt" > .gitignore && git add . && git commit -a -m"Initial Commit" && git tag stock && git clean -f -d
 
 clobber:
 	@rm -rf build
