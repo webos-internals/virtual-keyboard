@@ -55,6 +55,7 @@ ${DOCTOR_DIR}/root-1.4.1: ${DOCTOR_DIR}/webosdoctor-1.4.1.jar
 		tar -C $@ -m -z -x -f - ./usr; \
 	fi
 	@rm -f `find $@ -type l`
+	echo "cd $@"
 	@cd $@
 	@git init
 	@git add .
