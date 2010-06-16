@@ -1,5 +1,6 @@
+WEBOS_VERSION=1.4.0
 DOCTOR_DIR=/source/webos_doctors
-ROOT=${DOCTOR_DIR}/root-1.4.1
+ROOT=${DOCTOR_DIR}/root-${WEBOS_VERSION}
 PWD=$(shell pwd)
 PATCH_FILE=${PWD}/add-onscreen-keyboard.patch
 
@@ -32,7 +33,7 @@ generate: stock
 			cp $$i ${PWD}/additional_files/$$i; \
 		done
 
-${DOCTOR_DIR}/root-1.4.1: ${DOCTOR_DIR}/webosdoctor-1.4.1.jar
+${ROOT}: ${DOCTOR_DIR}/webosdoctor-${WEBOS_VERSION}.jar
 	@mkdir -p $@
 	@if [ -e $< ]; then \
 		unzip -p $< resources/webOS.tar | \
@@ -41,11 +42,6 @@ ${DOCTOR_DIR}/root-1.4.1: ${DOCTOR_DIR}/webosdoctor-1.4.1.jar
 	fi
 	@rm -f `find $@ -type l`
 	@cd $@ && git init && echo "files.aupt" > .gitignore && git add . && git commit -a -m"Initial Commit" && git tag stock
-
-.PRECIOUS: ${DOCTOR_DIR}/webosdoctor-1.4.1.jar
-${DOCTOR_DIR}/webosdoctor-1.4.1.jar:
-	mkdir -p ${DOCTOR_DIR}
-	curl -L -o $@ http://palm.cdnetworks.net/rom/pre/p1411r0d03312010/sr1ntp1411rod/webosdoctorp100ewwsprint.jar
 
 clobber:
 	@rm -rf build
