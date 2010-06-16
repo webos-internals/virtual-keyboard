@@ -1,4 +1,4 @@
-WEBOS_VERSION=1.4.3
+WEBOS_VERSION=1.4.5
 DOCTOR_DIR=/source/webos_doctors
 ROOT=${DOCTOR_DIR}/root-${WEBOS_VERSION}
 PWD=$(shell pwd)
@@ -37,7 +37,7 @@ ${ROOT}: ${DOCTOR_DIR}/webosdoctor-${WEBOS_VERSION}.jar
 	@mkdir -p $@
 	@if [ -e $< ]; then \
 		unzip -p $< resources/webOS.tar | \
-		tar -O -x -f - ./nova-cust-image-pixie.rootfs.tar.gz | \
+		tar -O -x -f - ./nova-cust-image-castle.rootfs.tar.gz | \
 		tar -C $@ -m -z -x -f - ./usr; \
 	fi
 	@rm -f `find $@ -type l`
