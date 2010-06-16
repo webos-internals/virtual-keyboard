@@ -33,7 +33,7 @@ generate: stock
 			cp $$i ${PWD}/additional_files/$$i; \
 		done
 
-${DOCTOR_DIR}/root-${WEBOS_VERSION}: ${DOCTOR_DIR}/webosdoctor-${WEBOS_VERSION}.jar
+${ROOT}: ${DOCTOR_DIR}/webosdoctor-${WEBOS_VERSION}.jar
 	@mkdir -p $@
 	@if [ -e $< ]; then \
 		unzip -p $< resources/webOS.tar | \
@@ -42,11 +42,6 @@ ${DOCTOR_DIR}/root-${WEBOS_VERSION}: ${DOCTOR_DIR}/webosdoctor-${WEBOS_VERSION}.
 	fi
 	@rm -f `find $@ -type l`
 	@cd $@ && git init && echo "files.aupt" > .gitignore && git add . && git commit -a -m"Initial Commit" && git tag stock
-
-.PRECIOUS: ${DOCTOR_DIR}/webosdoctor-${WEBOS_VERSION}.jar
-${DOCTOR_DIR}/webosdoctor-${WEBOS_VERSION}.jar:
-	mkdir -p ${DOCTOR_DIR}
-	curl -L -o $@ http://palm.cdnetworks.net/rom/pre/p1411r0d03312010/sr1ntp1411rod/webosdoctorp100ewwsprint.jar
 
 clobber:
 	@rm -rf build
