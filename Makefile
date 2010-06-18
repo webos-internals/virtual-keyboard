@@ -1,4 +1,4 @@
-WEBOS_VERSION=1.4.2
+WEBOS_VERSION=$(shell git branch | grep ^\* | cut -d- -f2)
 DOCTOR_DIR=/source/webos_doctors
 ROOT=${DOCTOR_DIR}/root-${WEBOS_VERSION}
 PWD=$(shell pwd)
@@ -37,11 +37,11 @@ ${ROOT}: ${DOCTOR_DIR}/webosdoctor-${WEBOS_VERSION}.jar
 	@mkdir -p $@
 	@if [ -e $< ]; then \
 		unzip -p $< resources/webOS.tar | \
-		tar -O -x -f - ./nova-cust-image-castle.rootfs.tar.gz | \
+		tar --wildcards -O -x -f - './nova-cust-image-*.rootfs.tar.gz' | \
 		tar -C $@ -m -z -x -f - ./usr; \
 	fi
 	@rm -f `find $@ -type l`
-	@cd $@ && git init && echo "files.aupt" > .gitignore && git add . && git commit -a -m"Initial Commit" && git tag stock && git clean -f -d
+	@cd $@ && git init && echo "files.aupt\n*.swp\n*.swo" > .gitignore && git add . && git commit -a -m"Initial Commit" && git tag stock && git clean -f -d
 
 clobber:
 	@rm -rf build
