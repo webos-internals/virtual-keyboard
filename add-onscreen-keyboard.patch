@@ -1,7 +1,7 @@
-diff --git a/usr/palm/frameworks/mojo/builtins/palmInitFramework347.js b/usr/palm/frameworks/mojo/builtins/palmInitFramework347.js
+diff --git a/usr/palm/frameworks/mojo/builtins/palmInitFramework345.js b/usr/palm/frameworks/mojo/builtins/palmInitFramework347.js
 index aed4b02..d6a081a 100644
---- a/usr/palm/frameworks/mojo/builtins/palmInitFramework347.js
-+++ b/usr/palm/frameworks/mojo/builtins/palmInitFramework347.js
+--- a/usr/palm/frameworks/mojo/builtins/palmInitFramework345.js
++++ b/usr/palm/frameworks/mojo/builtins/palmInitFramework345.js
 @@ -785,6 +785,7 @@ _Dialog:'widget_dialog',
  Pager:null,
  Drawer:null,
@@ -150,10 +150,10 @@ index aed4b02..d6a081a 100644
  this.maybeSendPropertyChangeEvent(triggeringEvent);
  }
  },
-diff --git a/usr/palm/frameworks/mojo/submissions/347/stylesheets/global.css b/usr/palm/frameworks/mojo/submissions/347/stylesheets/global.css
+diff --git a/usr/palm/frameworks/mojo/submissions/345/stylesheets/global.css b/usr/palm/frameworks/mojo/submissions/347/stylesheets/global.css
 index 9adb28a..da7f703 100644
---- a/usr/palm/frameworks/mojo/submissions/347/stylesheets/global.css
-+++ b/usr/palm/frameworks/mojo/submissions/347/stylesheets/global.css
+--- a/usr/palm/frameworks/mojo/submissions/345/stylesheets/global.css
++++ b/usr/palm/frameworks/mojo/submissions/345/stylesheets/global.css
 @@ -16,6 +16,7 @@
  @import url(global-iconography.css);
  @import url(global-widget-addressing.css);

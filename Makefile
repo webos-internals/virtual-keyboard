@@ -1,4 +1,4 @@
-WEBOS_VERSION=1.4.5
+WEBOS_VERSION=$(shell git branch | grep ^\* | cut -d- -f2)
 DOCTOR_DIR=/source/webos_doctors
 ROOT=${DOCTOR_DIR}/root-${WEBOS_VERSION}
 PWD=$(shell pwd)
