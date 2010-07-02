@@ -18,6 +18,7 @@ apply: stock ${PALM_FILES}
 ${PALM_FILES}: patch
 	@touch .gitignore
 	@[ "`grep $@ .gitignore`" != "" ] || echo $@ >> .gitignore
+	@mkdir -p `dirname $@`
 	@cp ${ROOT}/`echo $@ | cut -d/ -f2-` $@
 			
 .PHONY: patch
