@@ -1,19 +1,7 @@
 /* oskb */
 Mojo.Widget.VirtualKeyboard=Class.create({
 
-HI_PADDING_TOP:40,
-
-HI_PADDING_BOTTOM:20,
-
-HI_PADDING_LEFT:20,
-
-HI_PADDING_RIGHT:20,
-
 HI_COLUMNS:10,
-
-HI_MINIMUM_TOP:10,
-
-HI_MAX_BOTTOM:5,
 
 /* oskb */
 initialize:function(){
@@ -45,6 +33,10 @@ this.textCase="lowercase";
 this.charList=[];
 this.localizedTable=Mojo.Locale.kbCharacters;
 this.localizedTableFull=Mojo.Locale.kbCharactersFull;
+
+this.target=undefined;
+this.metaCount=0;
+this.oneEvent=false;
 },
 
 
@@ -60,6 +52,13 @@ if (options) {
   this.clickFile=options.clickFile;
   this.installed_themes=options.installed_themes;
 }
+else {
+  this.controller.scene.showAlertDialog({title:$LL("Error"), 
+      message: "Could not load configuration file kb_config.json.  " +
+                "Try to reinstall VKB Default Themes and Config", 
+      choices: [{label:$LL("OK")}]});
+  return;
+}
 
 this.funcIdx=20;
 this.dragIdx=30;
@@ -74,10 +73,6 @@ this.target=this.controller.get(this.controller.attributes.target);
 this.target=this.controller.get(model.selectionTarget);
 }
 this.divPrefix=Mojo.View.makeUniqueId();
-this.currCode=this.controller.model.character;
-if(this.currCode!==undefined){
-this.chorded=true;
-}
 
 if(this.renderWidget(this.controller.model.character)){
 this.maybeSetDiv=this.maybeSetDiv.bind(this);
@@ -94,24 +89,35 @@ this.handleKeyUpEvent=this.handleKeyUpEvent.bind(this);
 this.handleTapEvent=this.handleTapEvent.bind(this);
 this.handleFocusChange=this.handleFocusChange.bind(this);
 this.handleOrientation=this.handleOrientation.bindAsEventListener(this);
-this.controller.listen(this.target,"keydown",this.handleKeyEvent,true);
-this.controller.listen(this.target,"keyup",this.handleKeyUpEvent,true);
+this.handleHold=this.handleHold.bindAsEventListener(this);
+this.handleHoldEnd=this.handleHoldEnd.bindAsEventListener(this);
+this.handleEvent = this.handleEvent.bindAsEventListener(this);
+this.controller.listen(this.controller.document,"keydown",this.handleKeyEvent,true);
+this.controller.listen(this.controller.document,"keyup",this.handleKeyUpEvent,true);
 this.controller.listen(this.controller.document,Mojo.Event.orientationChange,this.handleOrientation,true);
 this.controller.listen(this.controller.document,Mojo.Event.dragStart,this.handleDragStart,true);
 this.controller.listen(this.controller.document,Mojo.Event.dragEnd,this.handleDragEnd,true);
 this.controller.listen(this.controller.document,Mojo.Event.dragging,this.handleDragging,true);
+this.controller.listen(this.controller.document,"DOMFocusIn",this.handleFocusChange,true);
+
+if (this.oneEvent) {
+this.controller.listen(this.controller.document, Mojo.Event.hold,this.handleEvent,true);
+this.controller.listen(this.controller.document, Mojo.Event.holdEnd,this.handleEvent,true);
+this.controller.listen(this.controller.document,'mouseover',this.handleEvent,true);
+this.controller.listen(this.controller.document,'mouseup',this.handleEvent,true);
+this.controller.listen(this.controller.document,'mousedown',this.handleEvent,true);
+this.controller.listen(this.controller.document,Mojo.Event.tap,this.handleEvent,true);
+}
+else {
+this.controller.listen(this.controller.document,Mojo.Event.hold,this.handleHold,true);
+this.controller.listen(this.controller.document,Mojo.Event.holdEnd,this.handleHoldEnd,true);
 this.controller.listen(this.controller.document,'mouseover',this.handleMouseOver,true);
 this.controller.listen(this.controller.document,'mouseup',this.handleMouseUp,true);
 this.controller.listen(this.controller.document,'mousedown',this.handleMouseDown,true);
 this.controller.listen(this.controller.document,Mojo.Event.tap,this.handleTapEvent,true);
-this.controller.listen(this.controller.document,"DOMFocusIn",this.handleFocusChange,true);
-
-if(this.chorded){
-
-this.state=this.VIRT_KB_FILTERING_STATE;
-}else{
-this.enterOpenState();
 }
+
+this.enterOpenState();
 /*
 this.controller.scene.pushContainer(this.controller.element,this.controller.scene.submenuContainerLayer,
 {cancelFunc:this._emptyAndClose.bind(this)});
@@ -120,34 +126,41 @@ this.controller.scene.pushCommander(this);
 }
 },
 
-
 /* oskb */
 cleanup:function(){
-
-
 this.charPicker=undefined;
 this.selectedIndex=undefined;
 this.state=this.VIRT_KB_CLOSED;
 this.cleanupEventListeners();
 },
 
-
-
-
-
 /* oskb */
 cleanupEventListeners:function(){
-this.controller.stopListening(this.target,"keydown",this.handleKeyEvent,true);
-this.controller.stopListening(this.target,"keyup",this.handleKeyUpEvent,true);
+this.controller.stopListening(this.controller.document,"keydown",this.handleKeyEvent,true);
+this.controller.stopListening(this.controller.document,"keyup",this.handleKeyUpEvent,true);
 this.controller.stopListening(this.controller.document,Mojo.Event.orientationChange,this.handleOrientation,true);
 this.controller.stopListening(this.controller.document,Mojo.Event.dragStart,this.handleDragStart,true);
 this.controller.stopListening(this.controller.document,Mojo.Event.dragEnd,this.handleDragEnd,true);
 this.controller.stopListening(this.controller.document,Mojo.Event.dragging,this.handleDragging,true);
+this.controller.stopListening(this.controller.document,"DOMFocusIn",this.handleFocusChange,true);
+
+if (this.oneEvent) {
+this.controller.stopListening(this.controller.document,Mojo.Event.hold,this.handleEvent,true);
+this.controller.stopListening(this.controller.document,Mojo.Event.holdEnd,this.handleEvent,true);
+this.controller.stopListening(this.controller.document,'mouseover',this.handleEvent,true);
+this.controller.stopListening(this.controller.document,'mouseup',this.handleEvent,true);
+this.controller.stopListening(this.controller.document,'mousedown',this.handleEvent,true);
+this.controller.stopListening(this.controller.document,Mojo.Event.tap,this.handleEvent,true);
+}
+else {
+this.controller.stopListening(this.controller.document,Mojo.Event.hold,this.handleHold,true);
+this.controller.stopListening(this.controller.document,Mojo.Event.holdEnd,this.handleHoldEnd,true);
 this.controller.stopListening(this.controller.document,'mouseover',this.handleMouseOver,true);
 this.controller.stopListening(this.controller.document,'mouseup',this.handleMouseUp,true);
 this.controller.stopListening(this.controller.document,'mousedown',this.handleMouseDown,true);
 this.controller.stopListening(this.controller.document,Mojo.Event.tap,this.handleTapEvent,true);
-this.controller.stopListening(this.controller.document,"DOMFocusIn",this.handleFocusChange,true);
+}
+
 },
 
 
@@ -177,19 +190,13 @@ if (!img) {
 
 alt=alt||" ";
 
-var e = new Image();
-var newImg;
-e.src=this.VIRT_KB_THEMES_PATH + this.theme + "/" + img;
-
-newImg=this.controller.document.createElement('img');
-newImg.addClassName('kb-img');
+var newImg = new Image();
 newImg.src=this.VIRT_KB_THEMES_PATH + this.theme + "/" + img;
+newImg.addClassName('kb-img');
 newImg.alt=alt;
 newImg.name=idx;
+
 return newImg;
-/*
-return "<img name='" + idx + "' class='kb-img' src='"+this.VIRT_KB_THEMES_PATH + this.theme + "/" + img + "' alt='" + alt + "'>";
-*/
 },
 
 /* oskb */
@@ -313,6 +320,13 @@ var themeObject;
 
 if (themeTable) {
   this.themeObject = Mojo.parseJSON(themeTable);
+}
+else {
+  this.controller.scene.showAlertDialog({title:$LL("Error"), 
+      message: "Could not load theme configuration file theme_config.json.  " +
+                "Try to reinstall theme: " + this.theme, 
+      choices: [{label:$LL("OK")}]});
+  return;
 }
 
 var that=this;
@@ -627,7 +641,7 @@ this.charPicker=this.controller.get(this.divPrefix+'-kb-char-selector-div');
 this.keyboard=this.controller.get(this.divPrefix+'-char-selector');
 
 this.controller.scene.setupWidget('char-list',
-{itemTemplate:Mojo.Widget.getSystemTemplatePath('kbselector/char-selector-row'+this.templateSuffix),renderLimit:30},this.itemsModel);
+{itemTemplate:Mojo.Widget.getSystemTemplatePath('kbselector/char-selector-row'+this.templateSuffix),renderLimit:400},this.itemsModel);
 this.controller.instantiateChildWidgets(this.charPicker);
 
 var that=this;
@@ -765,7 +779,7 @@ return this.state!==this.VIRT_KB_CLOSED;
 
 /* oskb */
 isSpecialChar:function(keyCode){
-  return(Mojo.Char.isEnterKey(keyCode) || Mojo.Char.isDeleteKey(keyCode));
+  return(Mojo.Char.isEnterKey(keyCode) || Mojo.Char.isDeleteKey(keyCode) || keyCode === Mojo.Char.spaceBar);
 },
 
 /* oskb */
@@ -922,7 +936,36 @@ return (letter && (delims.indexOf(letter) >= 0));
 },
 
 /* oskb */
-exitSelector:function(chr){
+sendKey:function(chr, keydown){
+  var keyCode=chr[this.mode]&&chr[this.mode].keyCode || chr['normal'].keyCode;
+
+  if (this.noService) {
+    return;
+  }
+
+  if (!keyCode || !Mojo.VKBCode[keyCode]) {
+    return;
+  }
+
+  var request = new Mojo.Service.Request('palm://org.webosinternals.keyboss', {
+    method: 'emulateKey',
+    parameters: {
+      code: Mojo.VKBCode[keyCode],
+      keydown: keydown
+    },
+    //onSuccess: function(){Mojo.Log.error("SUCCESS")},
+    onFailure: function(chr, payload){
+                 if(this.noService) return; 
+                 this.noService=true; 
+                 //Mojo.Log.error("chr " + chr); 
+                 //for (p in payload) Mojo.Log.error(p + ": " + payload[p]); 
+                 this.mojoKeyInsert(chr);
+               }.bind(this,chr)
+  });
+},
+
+/* oskb */
+mojoKeyInsert:function(chr){
 var letter;
 var keyCode;
 var characterVal,selection;
@@ -1054,6 +1097,17 @@ if (chr && this.funcState === this.FUNC_ONCE && keyCode !== Mojo.Char.altKey){
 }
 },
 
+/* oskb */
+exitSelector:function(chr){
+var keyCode=chr[this.mode]&&chr[this.mode].keyCode || chr['normal'].keyCode;
+  if (this.isSpecialChar(keyCode) && !this.noService) {
+    this.sendKey(chr, true);
+    this.sendKey(chr, false);
+  }
+  else {
+    this.mojoKeyInsert(chr);
+  }
+},
 
 /* oskb */
 _safeRemove:function(){
@@ -1191,63 +1245,47 @@ this.controller.get(this.divPrefix+'-char-selector').mojo.revealElement(this._se
 /* oskb */
 handleKeyUpEvent:function(event){
 if (event.keyCode === Mojo.Char.metaKey) {
-  console.log("leave");
-  this.exitSelector();
+  event.stop();
 }
-return;
-var keyCode=event.keyCode;
-var chr;
-
-this.exitSelector();
-return;
-
-if(this.isSymKey(keyCode)){
-if(this.state===this.VIRT_KB_FILTERING_STATE){
-chr=this.getEntered();
-}
-this.exitSelector(chr);
-Event.stop(event);
-return;
-}
+ return;
+//if (event.keyCode === Mojo.Char.metaKey) {
+ // console.log("leave");
+  //this.exitSelector();
+//}
 },
 
 
 /* oskb */
+show:function(target){
+  this.charPicker.show();
+  this.hidden = false;  
+  this._setPopupPositions(this.charPicker);
+},
+
+/* oskb */
+hide:function(){
+  this.charPicker.hide();
+  this.hidden = true;  
+},
+
+/* oskb */
 handleKeyEvent:function(event){
-return;
-var keyCode=event.keyCode;
-
-if(Mojo.Char.isEnterKey(keyCode)){
-this.exitSelector(this.getEntered());
-Event.stop(event);
-
-return;
-}
-if(Mojo.Char.isDeleteKey(keyCode)){
-this.exitSelector();
-Event.stop(event);
-return;
-}
-if(this.isDirectionalKey(keyCode)){
-this.updatePosition(keyCode);
-Event.stop(event);
-return;
-}
-
-if(!Mojo.Char.isValid(keyCode)){
-return;
-}
-
-switch(this.state){
-case this.VIRT_KB_OPEN:
-case this.VIRT_KB_FILTERING_STATE:
-case this.VIRT_KB_EMPTY:
-this.enterFilteringState(keyCode);
-Event.stop(event);
-break;
-default:
-break;
-}
+  if (event.keyCode === Mojo.Char.metaKey) {
+    event.stop();
+    this.metaCount++;
+    if (this.metaCount === 1) {
+      this.metaTimer=window.setTimeout(function(){this.metaCount=0;}.bind(this), 600);
+    }
+    else if (this.metaCount === 2) {
+      this.metaCount = 0;
+      if (this.hidden) {
+        this.show(event.target);
+      }
+      else {
+        this.hide();
+      }
+    }
+  }
 },
 
 /* oskb */
@@ -1298,25 +1336,115 @@ else {
 },
 
 /* oskb */
+stopRepeat:function(){
+  clearTimeout(this.timerId);
+},
+
+/* oskb */
+repeatKey:function(name){
+  this.exitSelector(this.charList[name]);
+  this.timerId = setTimeout(this.repeatKey.bind(this,name), 100);
+},
+
+/* oskb */
+handleEvent:function(event){
+  //Mojo.Log.error("event type " + event.type);
+  if (this.hidden || this.scrollEnabled || this.dragEnabled) {
+    return;
+  }
+
+  if (event.type === 'mousedown') {
+    if (this.preview && (this.preview !== event.target)) {
+      this.preview.removeClassName("kb-selected-char");
+      this.preview=undefined;
+    }
+  }
+
+  if (this.isInKeyboard(event.target)) {
+    var name = event.target.getAttribute('name');
+    switch(event.type) {
+      case Mojo.Event.hold:
+        this.repeatKey(name);
+        break;
+      case 'mouseup':
+        this.stopScroll=false;
+        if (this.preview) {
+          this.preview.removeClassName.bind(this.preview).defer("kb-selected-char");
+          this.preview=undefined;
+        }
+
+        if (this.clickFile) {
+          this.playClick();
+        }
+
+        if (this.downKey !== name)
+          this.exitSelector(this.charList[name]);
+
+        this.downKey = undefined;
+        break;
+      case Mojo.Event.holdEnd:
+        this.stopRepeat();
+        break;
+      case 'mouseover':
+        this.stopRepeat();
+        this.stopScroll=true;
+
+        if (this.preview) {
+          this.preview.removeClassName.bind(this.preview).defer("kb-selected-char");
+          this.preview=undefined;
+        }
+
+        this.preview=this.charDivs[name];
+        if (this.preview) {
+          this.preview.addClassName("kb-selected-char");
+        }
+
+        break;
+      case 'mousedown':
+        this.stopScroll=true;
+
+        if (this.haptic > 0 && this.haptic <= 100) {
+          this.vibrate();
+        }
+
+        this.preview=this.charDivs[name];
+        if (this.preview) {
+          this.preview.addClassName("kb-selected-char");
+        }
+
+        this.exitSelector(this.charList[name]);
+        this.downKey = name;
+        break;
+      default:
+        break;
+    }
+  }
+},
+
+/* oskb */
+handleHoldEnd:function(event){
+  this.stopRepeat();
+},
+
+/* oskb */
+handleHold:function(event){
+  this.repeatKey(event.target.getAttribute('name'));
+},
+
+/* oskb */
 handleMouseDown:function(event){
 if (this.scrollEnabled || this.dragEnabled) {
   return;
 }
 
 if (this.isInKeyboard(event.target)) {
-  event.stop();
+  //event.stop();
   this.stopScroll=true;
   if (this.haptic > 0 && this.haptic <= 100) {
     this.vibrate();
   }
 
   var name = event.target.getAttribute('name');
-  Mojo.Log.info("key " + name);
-  /*
-  if (!name || name === 'undefined') {
-    name = event.target.parentNode.getAttribute('name');
-  }
-  */
 
   this.preview=this.charDivs[name];
   if (this.preview) {
@@ -1327,6 +1455,7 @@ if (this.isInKeyboard(event.target)) {
 
 /* oskb */
 handleMouseOver:function(event){
+  this.stopRepeat();
 if (this.scrollEnabled || this.dragEnabled) {
   return;
 }
@@ -1337,19 +1466,11 @@ if (this.preview && (this.preview !== event.target)) {
 }
 
 if (this.isInKeyboard(event.target)) {
-  event.stop();
+  //event.stop();
   this.stopScroll=true;
   var name = event.target.getAttribute('name');
-  /*
-  if (!name || name === 'undefined') {
-    name = event.target.parentNode.getAttribute('name');
-  }
-  */
 
   this.preview=this.charDivs[name];
-  /*
-  this.preview=this.controller.get(this.divPrefix+"-"+name);
-  */
   if (this.preview) {
     this.preview.addClassName("kb-selected-char");
   }
@@ -1364,7 +1485,7 @@ if (this.scrollEnabled || this.dragEnabled) {
 }
 
 if (this.isInKeyboard(event.target)) {
-  event.stop();
+  //event.stop();
   if (this.clickFile) {
     this.playClick();
   }
@@ -1386,6 +1507,8 @@ if (this.themeSelector)
 /* oskb */
 handleFocusChange:function(event){
   this.target=event.target;
+  if (!Mojo.View.isTextField(event.target))
+    this.hide();
 },
 
 /* oskb */
@@ -1396,18 +1519,10 @@ if (!this.scrollEnabled) {
 
 if (this.state === this.VIRT_KB_OPEN){
   if (this.isInKeyboard(event.target)) {
-    event.stop();
+    //event.stop();
     var name = event.target.getAttribute('name');
-    /*
-    if (!name || name === 'undefined') {
-      name = event.target.parentNode.getAttribute('name');
-    }
-    */
 
     this.preview=this.charDivs[name];
-    /*
-    this.preview=this.controller.get(this.divPrefix+"-"+name);
-    */
     if (this.preview) {
       this.preview.addClassName("kb-selected-char");
     }
@@ -1546,3 +1661,52 @@ Event.stop(commandEvent);
 }
 }
 });
+
+Mojo.VKBCode = [
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0
+  ];
+
+
+Mojo.VKBCode[Mojo.Char.q] = 16;
+Mojo.VKBCode[Mojo.Char.w] = 17;
+Mojo.VKBCode[Mojo.Char.e] = 18; Mojo.VKBCode[Mojo.Char.one] = 18;
+Mojo.VKBCode[Mojo.Char.r] = 19; Mojo.VKBCode[Mojo.Char.two] = 19;
+Mojo.VKBCode[Mojo.Char.t] = 20; Mojo.VKBCode[Mojo.Char.three] = 20;
+Mojo.VKBCode[Mojo.Char.y] = 21;
+Mojo.VKBCode[Mojo.Char.u] = 22;
+Mojo.VKBCode[Mojo.Char.i] = 23;
+Mojo.VKBCode[Mojo.Char.o] = 24;
+Mojo.VKBCode[Mojo.Char.p] = 25;
+
+Mojo.VKBCode[Mojo.Char.a] = 30;
+Mojo.VKBCode[Mojo.Char.s] = 31;
+Mojo.VKBCode[Mojo.Char.d] = 32; Mojo.VKBCode[Mojo.Char.four] = 32;
+Mojo.VKBCode[Mojo.Char.f] = 33; Mojo.VKBCode[Mojo.Char.five] = 33;
+Mojo.VKBCode[Mojo.Char.g] = 34; Mojo.VKBCode[Mojo.Char.six] = 34;
+Mojo.VKBCode[Mojo.Char.h] = 35;
+Mojo.VKBCode[Mojo.Char.j] = 36;
+Mojo.VKBCode[Mojo.Char.k] = 37;
+Mojo.VKBCode[Mojo.Char.l] = 38;
+Mojo.VKBCode[Mojo.Char.backspace] = 14;
+
+Mojo.VKBCode[Mojo.Char.altKey] = 100;
+Mojo.VKBCode[Mojo.Char.z] = 44;
+Mojo.VKBCode[Mojo.Char.x] = 45; Mojo.VKBCode[Mojo.Char.seven] = 45;
+Mojo.VKBCode[Mojo.Char.c] = 46; Mojo.VKBCode[Mojo.Char.eight] = 46;
+Mojo.VKBCode[Mojo.Char.v] = 47; Mojo.VKBCode[Mojo.Char.nine] = 47;
+Mojo.VKBCode[Mojo.Char.b] = 48;
+Mojo.VKBCode[Mojo.Char.n] = 49;
+Mojo.VKBCode[Mojo.Char.m] = 50;
+Mojo.VKBCode[Mojo.Char.comma] = 51;
+Mojo.VKBCode[Mojo.Char.enter] = 28;
+
+Mojo.VKBCode[Mojo.Char.shift] = 42;
+ Mojo.VKBCode[Mojo.Char.zero] = 11;
+Mojo.VKBCode[Mojo.Char.spaceBar] = 57;
+Mojo.VKBCode[Mojo.Char.period] = 52;
+Mojo.VKBCode[Mojo.Char.sym] = 246;
