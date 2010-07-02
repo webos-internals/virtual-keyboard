@@ -1,3 +1,5 @@
 *.swp
 *.swo
 build
+additional_files/usr/palm/frameworks/mojo/builtins/palmInitFramework347.js
+additional_files/usr/palm/frameworks/mojo/submissions/347/stylesheets/global.css
