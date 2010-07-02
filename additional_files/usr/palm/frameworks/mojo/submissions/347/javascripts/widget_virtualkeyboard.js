@@ -1,19 +1,7 @@
 /* oskb */
 Mojo.Widget.VirtualKeyboard=Class.create({
 
-HI_PADDING_TOP:40,
-
-HI_PADDING_BOTTOM:20,
-
-HI_PADDING_LEFT:20,
-
-HI_PADDING_RIGHT:20,
-
 HI_COLUMNS:10,
-
-HI_MINIMUM_TOP:10,
-
-HI_MAX_BOTTOM:5,
 
 /* oskb */
 initialize:function(){
@@ -45,6 +33,9 @@ this.textCase="lowercase";
 this.charList=[];
 this.localizedTable=Mojo.Locale.kbCharacters;
 this.localizedTableFull=Mojo.Locale.kbCharactersFull;
+
+this.target=undefined;
+this.metaCount=0;
 },
 
 
@@ -67,17 +58,17 @@ this.shiftIdx=31;
 this.symIdx=35;
 this.themeIdx=36;
 
-this.controller.exposeMethods(['close','isOpen']);
+//this.controller.exposeMethods(['close','isOpen']);
 if(this.controller.attributes.target){
 this.target=this.controller.get(this.controller.attributes.target);
 }else if(model.selectionTarget){
 this.target=this.controller.get(model.selectionTarget);
 }
 this.divPrefix=Mojo.View.makeUniqueId();
-this.currCode=this.controller.model.character;
-if(this.currCode!==undefined){
-this.chorded=true;
-}
+//this.currCode=this.controller.model.character;
+//if(this.currCode!==undefined){
+//this.chorded=true;
+//}
 
 if(this.renderWidget(this.controller.model.character)){
 this.maybeSetDiv=this.maybeSetDiv.bind(this);
@@ -94,8 +85,8 @@ this.handleKeyUpEvent=this.handleKeyUpEvent.bind(this);
 this.handleTapEvent=this.handleTapEvent.bind(this);
 this.handleFocusChange=this.handleFocusChange.bind(this);
 this.handleOrientation=this.handleOrientation.bindAsEventListener(this);
-this.controller.listen(this.target,"keydown",this.handleKeyEvent,true);
-this.controller.listen(this.target,"keyup",this.handleKeyUpEvent,true);
+this.controller.listen(this.controller.document,"keydown",this.handleKeyEvent,true);
+this.controller.listen(this.controller.document,"keyup",this.handleKeyUpEvent,true);
 this.controller.listen(this.controller.document,Mojo.Event.orientationChange,this.handleOrientation,true);
 this.controller.listen(this.controller.document,Mojo.Event.dragStart,this.handleDragStart,true);
 this.controller.listen(this.controller.document,Mojo.Event.dragEnd,this.handleDragEnd,true);
@@ -106,12 +97,12 @@ this.controller.listen(this.controller.document,'mousedown',this.handleMouseDown
 this.controller.listen(this.controller.document,Mojo.Event.tap,this.handleTapEvent,true);
 this.controller.listen(this.controller.document,"DOMFocusIn",this.handleFocusChange,true);
 
-if(this.chorded){
+//if(this.chorded){
 
-this.state=this.VIRT_KB_FILTERING_STATE;
-}else{
+//this.state=this.VIRT_KB_FILTERING_STATE;
+//}else{
 this.enterOpenState();
-}
+//}
 /*
 this.controller.scene.pushContainer(this.controller.element,this.controller.scene.submenuContainerLayer,
 {cancelFunc:this._emptyAndClose.bind(this)});
@@ -543,6 +534,7 @@ else if (cursorPos && (cursorPos.y >= top) && (cursorPos.y >= pickerDims.height)
 }
 top+='px';
 
+Mojo.Log.error("top " + top);
 picker.setStyle({'top':top,'left':'0px'});
 },
 
@@ -765,7 +757,7 @@ return this.state!==this.VIRT_KB_CLOSED;
 
 /* oskb */
 isSpecialChar:function(keyCode){
-  return(Mojo.Char.isEnterKey(keyCode) || Mojo.Char.isDeleteKey(keyCode));
+  return(Mojo.Char.isEnterKey(keyCode) || Mojo.Char.isDeleteKey(keyCode) || keyCode === Mojo.Char.spaceBar);
 },
 
 /* oskb */
@@ -922,7 +914,27 @@ return (letter && (delims.indexOf(letter) >= 0));
 },
 
 /* oskb */
-exitSelector:function(chr){
+sendKey:function(chr, keydown, callback){
+var keyCode=chr[this.mode]&&chr[this.mode].keyCode || chr['normal'].keyCode;
+if (callback)
+  this.mojoKeyInsert(chr);
+  return;
+ if (!keyCode || !Mojo.VKBCode[keyCode])
+   return;
+var request = new Mojo.Service.Request('palm://org.webosinternals.keyboss', {
+  method: 'emulateKey',
+  parameters: {
+    code: Mojo.VKBCode[keyCode],
+    keydown: keydown
+  },
+  onSuccess: function(){Mojo.Log.info("SUCCESS")},
+  onFailure: function(payload){Mojo.Log.info("error " + payload.errorText)}
+  });
+return request;
+},
+
+/* oskb */
+mojoKeyInsert:function(chr){
 var letter;
 var keyCode;
 var characterVal,selection;
@@ -1054,6 +1066,16 @@ if (chr && this.funcState === this.FUNC_ONCE && keyCode !== Mojo.Char.altKey){
 }
 },
 
+/* oskb */
+exitSelector:function(chr){
+  if (chr) {
+    var blah = this.sendKey(chr, true, this.mojoKeyInsert);
+    var foo = this.sendKey(chr, false, null);
+  }
+  else {
+    this.mojoKeyInsert(chr);
+  }
+},
 
 /* oskb */
 _safeRemove:function(){
@@ -1191,63 +1213,49 @@ this.controller.get(this.divPrefix+'-char-selector').mojo.revealElement(this._se
 /* oskb */
 handleKeyUpEvent:function(event){
 if (event.keyCode === Mojo.Char.metaKey) {
-  console.log("leave");
-  this.exitSelector();
+  event.stop();
 }
-return;
-var keyCode=event.keyCode;
-var chr;
-
-this.exitSelector();
-return;
-
-if(this.isSymKey(keyCode)){
-if(this.state===this.VIRT_KB_FILTERING_STATE){
-chr=this.getEntered();
-}
-this.exitSelector(chr);
-Event.stop(event);
-return;
-}
+ return;
+//if (event.keyCode === Mojo.Char.metaKey) {
+ // console.log("leave");
+  //this.exitSelector();
+//}
 },
 
 
 /* oskb */
+show:function(target){
+  Mojo.Log.error("show " + target);
+  Mojo.Log.error("textfield");
+  this.charPicker.show();
+  this.hidden = false;  
+  this._setPopupPositions(this.charPicker);
+},
+
+/* oskb */
+hide:function(){
+  this.charPicker.hide();
+  this.hidden = true;  
+},
+
+/* oskb */
 handleKeyEvent:function(event){
-return;
-var keyCode=event.keyCode;
-
-if(Mojo.Char.isEnterKey(keyCode)){
-this.exitSelector(this.getEntered());
-Event.stop(event);
-
-return;
-}
-if(Mojo.Char.isDeleteKey(keyCode)){
-this.exitSelector();
-Event.stop(event);
-return;
-}
-if(this.isDirectionalKey(keyCode)){
-this.updatePosition(keyCode);
-Event.stop(event);
-return;
-}
-
-if(!Mojo.Char.isValid(keyCode)){
-return;
-}
-
-switch(this.state){
-case this.VIRT_KB_OPEN:
-case this.VIRT_KB_FILTERING_STATE:
-case this.VIRT_KB_EMPTY:
-this.enterFilteringState(keyCode);
-Event.stop(event);
-break;
-default:
-break;
-}
+  if (event.keyCode === Mojo.Char.metaKey) {
+    event.stop();
+    Mojo.Log.error("metaCount " + this.metaCount);
+    this.metaCount++;
+    if (this.metaCount === 1) {
+      this.metaTimer=window.setTimeout(function(){this.metaCount=0;}.bind(this), 600);
+    }
+    else if (this.metaCount === 2) {
+      if (this.hidden) {
+        this.show(event.target);
+      }
+      else {
+        this.hide();
+      }
+    }
+  }
 },
 
 /* oskb */
@@ -1385,7 +1393,10 @@ if (this.themeSelector)
 
 /* oskb */
 handleFocusChange:function(event){
+  Mojo.Log.error("FOCUS CHANGE TO " + event.target);
   this.target=event.target;
+  if (!Mojo.View.isTextField(event.target))
+    this.hide();
 },
 
 /* oskb */
@@ -1546,3 +1557,52 @@ Event.stop(commandEvent);
 }
 }
 });
+
+Mojo.VKBCode = [
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0
+  ];
+
+
+Mojo.VKBCode[Mojo.Char.q] = 16;
+Mojo.VKBCode[Mojo.Char.w] = 17;
+Mojo.VKBCode[Mojo.Char.e] = 18; Mojo.VKBCode[Mojo.Char.one] = 18;
+Mojo.VKBCode[Mojo.Char.r] = 19; Mojo.VKBCode[Mojo.Char.two] = 19;
+Mojo.VKBCode[Mojo.Char.t] = 20; Mojo.VKBCode[Mojo.Char.three] = 20;
+Mojo.VKBCode[Mojo.Char.y] = 21;
+Mojo.VKBCode[Mojo.Char.u] = 22;
+Mojo.VKBCode[Mojo.Char.i] = 23;
+Mojo.VKBCode[Mojo.Char.o] = 24;
+Mojo.VKBCode[Mojo.Char.p] = 25;
+
+Mojo.VKBCode[Mojo.Char.a] = 30;
+Mojo.VKBCode[Mojo.Char.s] = 31;
+Mojo.VKBCode[Mojo.Char.d] = 32; Mojo.VKBCode[Mojo.Char.four] = 32;
+Mojo.VKBCode[Mojo.Char.f] = 33; Mojo.VKBCode[Mojo.Char.five] = 33;
+Mojo.VKBCode[Mojo.Char.g] = 34; Mojo.VKBCode[Mojo.Char.six] = 34;
+Mojo.VKBCode[Mojo.Char.h] = 35;
+Mojo.VKBCode[Mojo.Char.j] = 36;
+Mojo.VKBCode[Mojo.Char.k] = 37;
+Mojo.VKBCode[Mojo.Char.l] = 38;
+Mojo.VKBCode[Mojo.Char.backspace] = 14;
+
+Mojo.VKBCode[Mojo.Char.altKey] = 100;
+Mojo.VKBCode[Mojo.Char.z] = 44;
+Mojo.VKBCode[Mojo.Char.x] = 45; Mojo.VKBCode[Mojo.Char.seven] = 45;
+Mojo.VKBCode[Mojo.Char.c] = 46; Mojo.VKBCode[Mojo.Char.eight] = 46;
+Mojo.VKBCode[Mojo.Char.v] = 47; Mojo.VKBCode[Mojo.Char.nine] = 47;
+Mojo.VKBCode[Mojo.Char.b] = 48;
+Mojo.VKBCode[Mojo.Char.n] = 49;
+Mojo.VKBCode[Mojo.Char.m] = 50;
+Mojo.VKBCode[Mojo.Char.comma] = 51;
+Mojo.VKBCode[Mojo.Char.enter] = 28;
+
+Mojo.VKBCode[Mojo.Char.shift] = 42;
+ Mojo.VKBCode[Mojo.Char.zero] = 11;
+Mojo.VKBCode[Mojo.Char.spaceBar] = 57;
+Mojo.VKBCode[Mojo.Char.period] = 52;
+Mojo.VKBCode[Mojo.Char.sym] = 246;
