@@ -51,6 +51,13 @@ if (options) {
   this.clickFile=options.clickFile;
   this.installed_themes=options.installed_themes;
 }
+else {
+  this.controller.scene.showAlertDialog({title:$LL("Error"), 
+      message: "Could not load configuration file kb_config.json.  " +
+                "Try to reinstall VKB Default Themes and Config", 
+      choices: [{label:$LL("OK")}]});
+  return;
+}
 
 this.funcIdx=20;
 this.dragIdx=30;
@@ -58,17 +65,12 @@ this.shiftIdx=31;
 this.symIdx=35;
 this.themeIdx=36;
 
-//this.controller.exposeMethods(['close','isOpen']);
 if(this.controller.attributes.target){
 this.target=this.controller.get(this.controller.attributes.target);
 }else if(model.selectionTarget){
 this.target=this.controller.get(model.selectionTarget);
 }
 this.divPrefix=Mojo.View.makeUniqueId();
-//this.currCode=this.controller.model.character;
-//if(this.currCode!==undefined){
-//this.chorded=true;
-//}
 
 if(this.renderWidget(this.controller.model.character)){
 this.maybeSetDiv=this.maybeSetDiv.bind(this);
@@ -97,12 +99,7 @@ this.controller.listen(this.controller.document,'mousedown',this.handleMouseDown
 this.controller.listen(this.controller.document,Mojo.Event.tap,this.handleTapEvent,true);
 this.controller.listen(this.controller.document,"DOMFocusIn",this.handleFocusChange,true);
 
-//if(this.chorded){
-
-//this.state=this.VIRT_KB_FILTERING_STATE;
-//}else{
 this.enterOpenState();
-//}
 /*
 this.controller.scene.pushContainer(this.controller.element,this.controller.scene.submenuContainerLayer,
 {cancelFunc:this._emptyAndClose.bind(this)});
@@ -111,20 +108,13 @@ this.controller.scene.pushCommander(this);
 }
 },
 
-
 /* oskb */
 cleanup:function(){
-
-
 this.charPicker=undefined;
 this.selectedIndex=undefined;
 this.state=this.VIRT_KB_CLOSED;
 this.cleanupEventListeners();
 },
-
-
-
-
 
 /* oskb */
 cleanupEventListeners:function(){
@@ -168,19 +158,13 @@ if (!img) {
 
 alt=alt||" ";
 
-var e = new Image();
-var newImg;
-e.src=this.VIRT_KB_THEMES_PATH + this.theme + "/" + img;
-
-newImg=this.controller.document.createElement('img');
-newImg.addClassName('kb-img');
+var newImg = new Image();
 newImg.src=this.VIRT_KB_THEMES_PATH + this.theme + "/" + img;
+newImg.addClassName('kb-img');
 newImg.alt=alt;
 newImg.name=idx;
+
 return newImg;
-/*
-return "<img name='" + idx + "' class='kb-img' src='"+this.VIRT_KB_THEMES_PATH + this.theme + "/" + img + "' alt='" + alt + "'>";
-*/
 },
 
 /* oskb */
@@ -304,6 +288,13 @@ var themeObject;
 
 if (themeTable) {
   this.themeObject = Mojo.parseJSON(themeTable);
+}
+else {
+  this.controller.scene.showAlertDialog({title:$LL("Error"), 
+      message: "Could not load theme configuration file theme_config.json.  " +
+                "Try to reinstall theme: " + this.theme, 
+      choices: [{label:$LL("OK")}]});
+  return;
 }
 
 var that=this;
@@ -534,7 +525,6 @@ else if (cursorPos && (cursorPos.y >= top) && (cursorPos.y >= pickerDims.height)
 }
 top+='px';
 
-Mojo.Log.error("top " + top);
 picker.setStyle({'top':top,'left':'0px'});
 },
 
@@ -619,7 +609,7 @@ this.charPicker=this.controller.get(this.divPrefix+'-kb-char-selector-div');
 this.keyboard=this.controller.get(this.divPrefix+'-char-selector');
 
 this.controller.scene.setupWidget('char-list',
-{itemTemplate:Mojo.Widget.getSystemTemplatePath('kbselector/char-selector-row'+this.templateSuffix),renderLimit:30},this.itemsModel);
+{itemTemplate:Mojo.Widget.getSystemTemplatePath('kbselector/char-selector-row'+this.templateSuffix),renderLimit:400},this.itemsModel);
 this.controller.instantiateChildWidgets(this.charPicker);
 
 var that=this;
@@ -1225,8 +1215,6 @@ if (event.keyCode === Mojo.Char.metaKey) {
 
 /* oskb */
 show:function(target){
-  Mojo.Log.error("show " + target);
-  Mojo.Log.error("textfield");
   this.charPicker.show();
   this.hidden = false;  
   this._setPopupPositions(this.charPicker);
@@ -1242,12 +1230,12 @@ hide:function(){
 handleKeyEvent:function(event){
   if (event.keyCode === Mojo.Char.metaKey) {
     event.stop();
-    Mojo.Log.error("metaCount " + this.metaCount);
     this.metaCount++;
     if (this.metaCount === 1) {
       this.metaTimer=window.setTimeout(function(){this.metaCount=0;}.bind(this), 600);
     }
     else if (this.metaCount === 2) {
+      this.metaCount = 0;
       if (this.hidden) {
         this.show(event.target);
       }
@@ -1393,7 +1381,6 @@ if (this.themeSelector)
 
 /* oskb */
 handleFocusChange:function(event){
-  Mojo.Log.error("FOCUS CHANGE TO " + event.target);
   this.target=event.target;
   if (!Mojo.View.isTextField(event.target))
     this.hide();
