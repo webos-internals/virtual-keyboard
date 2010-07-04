@@ -1323,16 +1323,7 @@ var request2 = new Mojo.Service.Request('palm://com.palm.vibrate', {
 
 /* oskb */
 handleOrientation:function(event){
-/*TODO: I'm not sure why, but every change I get two events, back to back.
- *      For now just ignore the 2nd orient event */
-if (this.ignoreSecond) {
-  this.ignoreSecond=false;
-  return;
-}
-else {
-  this.ignoreSecond=true;
   this.maybeChangeLayout();
-}
 },
 
 /* oskb */
