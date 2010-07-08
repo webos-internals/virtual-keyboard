@@ -89,8 +89,6 @@ this.handleKeyUpEvent=this.handleKeyUpEvent.bind(this);
 this.handleTapEvent=this.handleTapEvent.bind(this);
 this.handleFocusChange=this.handleFocusChange.bind(this);
 this.handleOrientation=this.handleOrientation.bindAsEventListener(this);
-this.handleHold=this.handleHold.bindAsEventListener(this);
-this.handleHoldEnd=this.handleHoldEnd.bindAsEventListener(this);
 this.handleEvent = this.handleEvent.bindAsEventListener(this);
 this.controller.listen(this.controller.document,"keydown",this.handleKeyEvent,true);
 this.controller.listen(this.controller.document,"keyup",this.handleKeyUpEvent,true);
@@ -109,8 +107,6 @@ this.controller.listen(this.controller.document,'mousedown',this.handleEvent,tru
 this.controller.listen(this.controller.document,Mojo.Event.tap,this.handleEvent,true);
 }
 else {
-this.controller.listen(this.controller.document,Mojo.Event.hold,this.handleHold,true);
-this.controller.listen(this.controller.document,Mojo.Event.holdEnd,this.handleHoldEnd,true);
 this.controller.listen(this.controller.document,'mouseover',this.handleMouseOver,true);
 this.controller.listen(this.controller.document,'mouseup',this.handleMouseUp,true);
 this.controller.listen(this.controller.document,'mousedown',this.handleMouseDown,true);
@@ -153,8 +149,6 @@ this.controller.stopListening(this.controller.document,'mousedown',this.handleEv
 this.controller.stopListening(this.controller.document,Mojo.Event.tap,this.handleEvent,true);
 }
 else {
-this.controller.stopListening(this.controller.document,Mojo.Event.hold,this.handleHold,true);
-this.controller.stopListening(this.controller.document,Mojo.Event.holdEnd,this.handleHoldEnd,true);
 this.controller.stopListening(this.controller.document,'mouseover',this.handleMouseOver,true);
 this.controller.stopListening(this.controller.document,'mouseup',this.handleMouseUp,true);
 this.controller.stopListening(this.controller.document,'mousedown',this.handleMouseDown,true);
@@ -1328,13 +1322,21 @@ handleOrientation:function(event){
 
 /* oskb */
 stopRepeat:function(){
-  clearTimeout(this.timerId);
+  if (this.timerId) {
+    clearTimeout(this.timerId);
+    this.timerId = null;
+  }
 },
 
 /* oskb */
 repeatKey:function(name){
-  this.exitSelector(this.charList[name]);
-  this.timerId = setTimeout(this.repeatKey.bind(this,name), 100);
+  if (this.timerId) {
+    this.exitSelector(this.charList[name]);
+    this.timerId = setTimeout(this.repeatKey.bind(this,name), 100);
+  }
+  else {
+    this.timerId = setTimeout(this.repeatKey.bind(this,name), 500);
+  }
 },
 
 /* oskb */
@@ -1413,23 +1415,13 @@ handleEvent:function(event){
 },
 
 /* oskb */
-handleHoldEnd:function(event){
-  this.stopRepeat();
-},
-
-/* oskb */
-handleHold:function(event){
-  this.repeatKey(event.target.getAttribute('name'));
-},
-
-/* oskb */
 handleMouseDown:function(event){
 if (this.scrollEnabled || this.dragEnabled) {
   return;
 }
 
 if (this.isInKeyboard(event.target)) {
-  //event.stop();
+  event.stop();
   this.stopScroll=true;
   if (this.haptic > 0 && this.haptic <= 100) {
     this.vibrate();
@@ -1441,6 +1433,7 @@ if (this.isInKeyboard(event.target)) {
   if (this.preview) {
     this.preview.addClassName("kb-selected-char");
   }
+  this.repeatKey(name);
 }
 },
 
@@ -1457,7 +1450,7 @@ if (this.preview && (this.preview !== event.target)) {
 }
 
 if (this.isInKeyboard(event.target)) {
-  //event.stop();
+  event.stop();
   this.stopScroll=true;
   var name = event.target.getAttribute('name');
 
@@ -1470,13 +1463,14 @@ if (this.isInKeyboard(event.target)) {
 
 /* oskb */
 handleMouseUp:function(event){
+  this.stopRepeat();
 this.stopScroll=false;
 if (this.scrollEnabled || this.dragEnabled) {
   return;
 }
 
 if (this.isInKeyboard(event.target)) {
-  //event.stop();
+  event.stop();
   if (this.clickFile) {
     this.playClick();
   }
