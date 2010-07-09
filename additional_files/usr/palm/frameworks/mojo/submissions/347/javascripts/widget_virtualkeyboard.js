@@ -37,6 +37,7 @@ this.localizedTableFull=Mojo.Locale.kbCharactersFull;
 this.target=undefined;
 this.metaCount=0;
 this.oneEvent=false;
+this.keyLocations = [];
 },
 
 
@@ -55,7 +56,7 @@ if (options) {
 else {
   this.controller.scene.showAlertDialog({title:$LL("Error"), 
       message: "Could not load configuration file kb_config.json.  " +
-                "Try to reinstall VKB Default Themes and Config", 
+                "Try to reinstall the package titled 'VKB Default Themes and Configuration'", 
       choices: [{label:$LL("OK")}]});
   return;
 }
@@ -86,7 +87,9 @@ this.handleDragEnd=this.handleDragEnd.bindAsEventListener(this);
 this.handleDragging=this.handleDragging.bindAsEventListener(this);
 this.handleKeyEvent=this.handleKeyEvent.bind(this);
 this.handleKeyUpEvent=this.handleKeyUpEvent.bind(this);
+/*
 this.handleTapEvent=this.handleTapEvent.bind(this);
+*/
 this.handleFocusChange=this.handleFocusChange.bind(this);
 this.handleOrientation=this.handleOrientation.bindAsEventListener(this);
 this.handleEvent = this.handleEvent.bindAsEventListener(this);
@@ -110,7 +113,9 @@ else {
 this.controller.listen(this.controller.document,'mouseover',this.handleMouseOver,true);
 this.controller.listen(this.controller.document,'mouseup',this.handleMouseUp,true);
 this.controller.listen(this.controller.document,'mousedown',this.handleMouseDown,true);
+/*
 this.controller.listen(this.controller.document,Mojo.Event.tap,this.handleTapEvent,true);
+*/
 }
 
 this.enterOpenState();
@@ -152,7 +157,9 @@ else {
 this.controller.stopListening(this.controller.document,'mouseover',this.handleMouseOver,true);
 this.controller.stopListening(this.controller.document,'mouseup',this.handleMouseUp,true);
 this.controller.stopListening(this.controller.document,'mousedown',this.handleMouseDown,true);
+/*
 this.controller.stopListening(this.controller.document,Mojo.Event.tap,this.handleTapEvent,true);
+*/
 }
 
 },
@@ -529,6 +536,28 @@ var pickerDims=Mojo.View.getDimensions(picker);
 var targetOffset=Mojo.View.viewportOffset(this.target);
 
 /*
+Mojo.Log.error("char picker dims = " + Object.toJSON(Mojo.View.getDimensions(this.charPicker)));
+Mojo.Log.error("target dims = " + Object.toJSON(Mojo.View.getDimensions(this.target)));
+Mojo.Log.error("target style " + this.target.style);
+Mojo.Log.error("target top " + this.target.style.top);
+Mojo.Log.error("target offsettop " + this.target.offsetTop);
+Mojo.Log.error("viewport offset " + Object.toJSON(Mojo.View.viewportOffset(this.target)));
+
+Mojo.Log.error("cursor pos = " + cursorPos.x + ", " + cursorPos.y);
+Mojo.Log.error("viewDims = " + viewDims.width + " X " + viewDims.height);
+Mojo.Log.error("pickerDimes = " + pickerDims.width + " X " + pickerDims.height);
+Mojo.Log.error("pickerDims = " + Object.toJSON(pickerDims));
+*/
+/*
+Mojo.Log.error("0 dims " + Object.toJSON(Mojo.View.getDimensions(this.charDivs[0])));
+Mojo.Log.error("1 dims " + Object.toJSON(Mojo.View.getDimensions(this.charDivs[1])));
+Mojo.Log.error("2 dims " + Object.toJSON(Mojo.View.getDimensions(this.charDivs[2])));
+
+Mojo.Log.error("0 dims " + Object.toJSON(Mojo.View.viewportOffset(this.charDivs[0])));
+Mojo.Log.error("1 dims " + Object.toJSON(Mojo.View.viewportOffset(this.charDivs[1])));
+Mojo.Log.error("2 dims " + Object.toJSON(Mojo.View.viewportOffset(this.charDivs[2])));
+*/
+/*
 console.log("char picker dims = " + Object.toJSON(Mojo.View.getDimensions(this.charPicker)));
 console.log("target dims = " + Object.toJSON(Mojo.View.getDimensions(this.target)));
 console.log("target style " + this.target.style);
@@ -552,8 +581,18 @@ else if (cursorPos && (cursorPos.y >= top) && (cursorPos.y >= pickerDims.height)
 top+='px';
 
 picker.setStyle({'top':top,'left':'0px'});
+
+this.updateKeyLocations();
 },
 
+/* oskb */
+updateKeyLocations:function(){
+  for (var i=0; i<40; i++) {
+    var dimensions = Mojo.View.getDimensions(this.charDivs[i]);
+    var offsets = Mojo.View.viewportOffset(this.charDivs[i]);
+    this.keyLocations[i] = {left: offsets.left, top: offsets.top, width: dimensions.width, height: dimensions.height};
+  }
+},
 
 /* oskb */
 translateToRow:function(results){
@@ -648,6 +687,8 @@ this.charList.each(function(c){
   that.testDivs.push(data.descendants()[0]);
 });
 
+this.controller.scene.showWidgetContainer(this.charPicker);
+
 /* Adjust the width based on the span number */
 for (var i=0; i<40; i++) {
   if (this.charList[i]['normal'].span) {
@@ -655,9 +696,8 @@ for (var i=0; i<40; i++) {
     this._getMatching(this.charPicker,i).setStyle({"width":newWidth});
   }
 }
-this.controller.scene.showWidgetContainer(this.charPicker);
-this._setPopupPositions(this.charPicker);
 
+this._setPopupPositions(this.charPicker);
 this.selectedIndex=0;
 if (this.scrollEnabled) {
   this.controller.get(this.divPrefix+"-char-selector").mojo.revealElement(this.controller.get(this.divPrefix+"-50"));
@@ -1330,8 +1370,8 @@ stopRepeat:function(){
 
 /* oskb */
 repeatKey:function(name){
+  this.exitSelector(this.charList[name]);
   if (this.timerId) {
-    this.exitSelector(this.charList[name]);
     this.timerId = setTimeout(this.repeatKey.bind(this,name), 100);
   }
   else {
@@ -1415,78 +1455,114 @@ handleEvent:function(event){
 },
 
 /* oskb */
+findKeyIndex:function(x, y){
+  var k;
+
+  for (var i=0; i<40; i++) {
+    k = this.keyLocations[i];
+    if ((x >= k.left) && (x <= k.left + k.width) && (y >= k.top) && (y <= k.top + k.height)) {
+      return i;
+    }
+  }
+},
+
+/* oskb */
 handleMouseDown:function(event){
-if (this.scrollEnabled || this.dragEnabled) {
-  return;
-}
+  var keyIndex = this.findKeyIndex(event.x, event.y);
 
-if (this.isInKeyboard(event.target)) {
+  this.preview=this.charDivs[keyIndex];
+  this.preview.addClassName("kb-selected-char");
+  this.doMouseDown.bind(this).defer(event, keyIndex);
+
   event.stop();
-  this.stopScroll=true;
-  if (this.haptic > 0 && this.haptic <= 100) {
-    this.vibrate();
-  }
+},
 
-  var name = event.target.getAttribute('name');
+doMouseDown:function(event, keyIndex){
+  if (this.scrollEnabled || this.dragEnabled)
+    return;
 
-  this.preview=this.charDivs[name];
-  if (this.preview) {
-    this.preview.addClassName("kb-selected-char");
+  if (this.isInKeyboard(event.target)) {
+    this.stopScroll=true;
+    if (this.haptic > 0 && this.haptic <= 100)
+      this.vibrate();
+
+  this.lastKey = keyIndex;
+  this.repeatKey(keyIndex);
   }
-  this.repeatKey(name);
-}
 },
 
 /* oskb */
 handleMouseOver:function(event){
+  var keyIndex = this.findKeyIndex(event.x, event.y);
+
   this.stopRepeat();
+
+  if (this.preview) {
+    if (this.preview !== this.charDivs[keyIndex]) {
+      this.preview.removeClassName("kb-selected-char");
+      this.preview=undefined;
+    }
+  }
+
+  if (this.isInKeyboard(event.target)) {
+    this.stopScroll=true;
+    this.preview=this.charDivs[keyIndex];
+    this.preview.addClassName("kb-selected-char");
+  }
+
+  event.stop();
+  /*
 if (this.scrollEnabled || this.dragEnabled) {
   return;
 }
+*/
 
-if (this.preview && (this.preview !== event.target)) {
-  this.preview.removeClassName("kb-selected-char");
-  this.preview=undefined;
-}
-
+/*
 if (this.isInKeyboard(event.target)) {
   event.stop();
   this.stopScroll=true;
-  var name = event.target.getAttribute('name');
+  var keyIndex = this.findKeyIndex(event.x, event.y);
 
-  this.preview=this.charDivs[name];
+  this.preview=this.charDivs[keyIndex];
   if (this.preview) {
     this.preview.addClassName("kb-selected-char");
   }
 }
+*/
 },
 
 /* oskb */
 handleMouseUp:function(event){
-  this.stopRepeat();
-this.stopScroll=false;
-if (this.scrollEnabled || this.dragEnabled) {
-  return;
-}
-
-if (this.isInKeyboard(event.target)) {
   event.stop();
-  if (this.clickFile) {
-    this.playClick();
-  }
 
   if (this.preview) {
-    this.preview.removeClassName.bind(this.preview).defer("kb-selected-char");
+    this.preview.removeClassName("kb-selected-char");
     this.preview=undefined;
   }
 
-  if (this.state === this.VIRT_KB_OPEN){
-    this.exitSelector(this.getSelected(event.target));
-  }
-}
+  this.doMouseUp.bind(this).defer(event);
+},
 
-if (this.themeSelector)
-  this.themeSelector=undefined;
+doMouseUp:function(event){
+  this.stopRepeat();
+  this.stopScroll=false;
+  if (this.scrollEnabled || this.dragEnabled)
+    return;
+
+  if (this.isInKeyboard(event.target)) {
+    if (this.clickFile)
+      this.playClick();
+
+    if (this.state === this.VIRT_KB_OPEN){
+      var keyIndex = this.findKeyIndex(event.x, event.y);
+
+      if (this.lastKey !== keyIndex)
+        this.exitSelector(this.charList[this.findKeyIndex(event.x, event.y)]);
+    }
+  }
+
+  if (this.themeSelector)
+    this.themeSelector=undefined;
 },
 
 /* oskb */
@@ -1497,14 +1573,17 @@ handleFocusChange:function(event){
 },
 
 /* oskb */
+  /*
 handleTapEvent:function(event){
+event.stop();
+return;
 if (!this.scrollEnabled) {
   return;
 }
 
 if (this.state === this.VIRT_KB_OPEN){
   if (this.isInKeyboard(event.target)) {
-    //event.stop();
+    event.stop();
     var name = event.target.getAttribute('name');
 
     this.preview=this.charDivs[name];
@@ -1521,6 +1600,7 @@ if (this.state === this.VIRT_KB_OPEN){
 if (this.themeSelector)
   this.themeSelector=undefined;
 },
+*/
 
 /* oskb */
 handleDragStart:function(event){
