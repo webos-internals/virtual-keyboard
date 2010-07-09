@@ -193,3 +193,15 @@ index 2db731c..037259e 100644
  this.maybeSendPropertyChangeEvent(triggeringEvent);
  }
  },
+diff --git a/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css b/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
+index 9adb28a..da7f703 100644
+--- a/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
++++ b/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
+@@ -16,6 +16,7 @@
+ @import url(global-iconography.css);
+ @import url(global-widget-addressing.css);
+ @import url(global-widget-mvpicker.css);
++@import url(webos-internals-virtual-keyboard.css);
+ 
+ a {
+   color: #00c;
