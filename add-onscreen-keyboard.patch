@@ -1,8 +1,8 @@
-diff --git a/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js b/usr/palm/frameworks/mojo/builtins/palmInitFramework347.js
-index aed4b02..467832e 100644
+diff --git a/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js b/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js
+index 2db731c..037259e 100644
 --- a/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js
 +++ b/usr/palm/frameworks/mojo/builtins/palmInitFramework338.js
-@@ -785,6 +785,7 @@ _Dialog:'widget_dialog',
+@@ -778,6 +778,7 @@ _Dialog:'widget_dialog',
  Pager:null,
  Drawer:null,
  CharSelector:null,
@@ -10,7 +10,7 @@ index aed4b02..467832e 100644
  FilterList:null,
  _Submenu:'widget_submenu',
  ExperimentalGridList:'widget_grid',
-@@ -4062,6 +4063,11 @@ if(this.charSelectorIsOpen()){
+@@ -4055,6 +4056,11 @@ if(this.charSelectorIsOpen()){
  return;
  }
  this.charSelector=this.createDynamicWidget('CharSelector',{selectionTarget:event.selectionTarget});
@@ -22,7 +22,7 @@ index aed4b02..467832e 100644
  }
  },
  
-@@ -4348,6 +4354,7 @@ kDefaultSceneName:'main',
+@@ -4341,6 +4347,7 @@ kDefaultSceneName:'main',
  kSceneClassName:'palm-scene',
  kBrowserObject:'application/x-palm-browser',
  enableAltCharPicker:true,
@@ -30,7 +30,7 @@ index aed4b02..467832e 100644
  
  
  
-@@ -4359,6 +4366,7 @@ this.document=this.window.document;
+@@ -4352,6 +4359,7 @@ this.document=this.window.document;
  this.paramsFromURI=this.document.baseURI.toQueryParams();
  this.stageType=this.paramsFromURI.window||"card";
  this._stageProxy=stageProxy;
@@ -38,7 +38,7 @@ index aed4b02..467832e 100644
  
  this._stagePreparing=true;
  
-@@ -4422,8 +4430,39 @@ this.window.focus=focusWrapper;
+@@ -4415,8 +4423,39 @@ this.window.focus=focusWrapper;
  if(this.window._mojoLightweightWindow){
  Mojo.Locale.loadLocaleSpecificStylesheets(this.document);
  }
@@ -79,7 +79,7 @@ index aed4b02..467832e 100644
  
  _cleanup:function(){
  var stageName;
-@@ -5276,6 +5315,15 @@ var scene=this.topScene();
+@@ -5269,6 +5308,15 @@ var scene=this.topScene();
  var tempTextArea,msg,scriptNode;
  var webView;
  
@@ -95,7 +95,7 @@ index aed4b02..467832e 100644
  if(Mojo.Controller.isGoBackKey(event)){
  var newEv=Mojo.Event.make(Mojo.Event.back,{originalEvent:event});
  this.sendEventToCommanders(newEv);
-@@ -5296,6 +5344,16 @@ if(webView){
+@@ -5289,6 +5337,16 @@ if(webView){
  webView.mojo.isEditing(this._sendCharpickerEventCallback.bind(this,Mojo.Event.renderAltCharacters,webView,null));
  }
  }
@@ -112,7 +112,7 @@ index aed4b02..467832e 100644
  }else if(event.keyCode===Mojo.Char.o&&event.ctrlKey&&event.shiftKey&&Mojo.Config.debuggingEnabled){
  
  
-@@ -5353,6 +5411,13 @@ this._forwardEventToTopContainer(Mojo.Event.keyup,event);
+@@ -5346,6 +5404,13 @@ this._forwardEventToTopContainer(Mojo.Event.keyup,event);
  _keyDownHandler:function(event){
  var webView;
  
@@ -126,7 +126,7 @@ index aed4b02..467832e 100644
  if(this.enableAltCharPicker&&event.keyCode!==Mojo.Char.sym&&event.ctrlKey){
  if(this.doesTargetAcceptKeys(event.target)){
  this._sendCharpickerEvent(Mojo.Event.renderChordedAltCharacters,event.target,event.keyCode);
-@@ -10297,6 +10362,9 @@ Mojo.Event.renderAltCharacters='mojo-altchars';
+@@ -10288,6 +10353,9 @@ Mojo.Event.renderAltCharacters='mojo-altchars';
  Mojo.Event.renderChordedAltCharacters='mojo-altchars-chorded';
  
  
@@ -136,7 +136,7 @@ index aed4b02..467832e 100644
  Mojo.Event.orientationChange='mojo-orientation';
  
  
-@@ -11626,7 +11694,7 @@ return stringTable;
+@@ -11617,7 +11685,7 @@ return stringTable;
  
  Mojo.Locale.set=function(currentLocale,formatRegion){
  var deviceInfo=Mojo.Environment.DeviceInfo;
@@ -145,7 +145,7 @@ index aed4b02..467832e 100644
  
  if(Mojo.Locale.current!=currentLocale){
  Mojo.Locale.current=currentLocale;
-@@ -11668,10 +11736,14 @@ switch(deviceInfo.keyboardType){
+@@ -11659,10 +11727,14 @@ switch(deviceInfo.keyboardType){
  case Mojo.Environment.AZERTY:
  altCharTable="alternatechars_table_azerty.json";
  altCharFullTable="alternatechars_fulltable_azerty.json";
@@ -160,7 +160,7 @@ index aed4b02..467832e 100644
  break;
  case Mojo.Environment.QWERTZ_ACC:
  altCharTable="alternatechars_table_qwertz_accented.json";
-@@ -11684,8 +11756,12 @@ break;
+@@ -11675,8 +11747,12 @@ break;
  default:
  altCharTable="alternatechars_table.json";
  altCharFullTable="alternatechars_fulltable.json";
@@ -173,7 +173,7 @@ index aed4b02..467832e 100644
  Mojo.Locale.alternateCharacters=Mojo.Locale.readStringTable(altCharTable,Mojo.Locale.current,Mojo.Locale.frameworkResourcePath,altCharArrayMerge);
  Mojo.Locale.alternateCharactersFull=Mojo.Locale.readStringTable(altCharFullTable,Mojo.Locale.current,Mojo.Locale.frameworkResourcePath,altCharArrayMerge);
  Mojo.Locale.DateTimeStrings=Mojo.Locale.readStringTable("datetime_table.json",Mojo.Locale.current,Mojo.Locale.frameworkResourcePath);
-@@ -21183,6 +21259,9 @@ return;
+@@ -21144,6 +21220,9 @@ return;
  if(Mojo.Char.isCommitKey(chr)){
  return;
  }
@@ -183,7 +183,7 @@ index aed4b02..467832e 100644
  
  switch(this.STATE){
  case this.ADDRESSING_WIDGET_FOCUSED:
-@@ -31941,7 +32020,8 @@ return false;
+@@ -31897,7 +31976,8 @@ return false;
  
  sendChanges:function(triggeringEvent){
  
@@ -193,15 +193,3 @@ index aed4b02..467832e 100644
  this.maybeSendPropertyChangeEvent(triggeringEvent);
  }
  },
-diff --git a/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css b/usr/palm/frameworks/mojo/submissions/347/stylesheets/global.css
-index 9adb28a..da7f703 100644
---- a/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
-+++ b/usr/palm/frameworks/mojo/submissions/338/stylesheets/global.css
-@@ -16,6 +16,7 @@
- @import url(global-iconography.css);
- @import url(global-widget-addressing.css);
- @import url(global-widget-mvpicker.css);
-+@import url(webos-internals-virtual-keyboard.css);
- 
- a {
-   color: #00c;
