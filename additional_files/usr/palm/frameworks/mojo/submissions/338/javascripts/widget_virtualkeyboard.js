@@ -37,6 +37,7 @@ this.localizedTableFull=Mojo.Locale.kbCharactersFull;
 this.target=undefined;
 this.metaCount=0;
 this.oneEvent=false;
+this.keyLocations = [];
 },
 
 
@@ -55,7 +56,7 @@ if (options) {
 else {
   this.controller.scene.showAlertDialog({title:$LL("Error"), 
       message: "Could not load configuration file kb_config.json.  " +
-                "Try to reinstall VKB Default Themes and Config", 
+                "Try to reinstall the package titled 'VKB Default Themes and Configuration'", 
       choices: [{label:$LL("OK")}]});
   return;
 }
@@ -89,8 +90,6 @@ this.handleKeyUpEvent=this.handleKeyUpEvent.bind(this);
 this.handleTapEvent=this.handleTapEvent.bind(this);
 this.handleFocusChange=this.handleFocusChange.bind(this);
 this.handleOrientation=this.handleOrientation.bindAsEventListener(this);
-this.handleHold=this.handleHold.bindAsEventListener(this);
-this.handleHoldEnd=this.handleHoldEnd.bindAsEventListener(this);
 this.handleEvent = this.handleEvent.bindAsEventListener(this);
 this.controller.listen(this.controller.document,"keydown",this.handleKeyEvent,true);
 this.controller.listen(this.controller.document,"keyup",this.handleKeyUpEvent,true);
@@ -109,8 +108,6 @@ this.controller.listen(this.controller.document,'mousedown',this.handleEvent,tru
 this.controller.listen(this.controller.document,Mojo.Event.tap,this.handleEvent,true);
 }
 else {
-this.controller.listen(this.controller.document,Mojo.Event.hold,this.handleHold,true);
-this.controller.listen(this.controller.document,Mojo.Event.holdEnd,this.handleHoldEnd,true);
 this.controller.listen(this.controller.document,'mouseover',this.handleMouseOver,true);
 this.controller.listen(this.controller.document,'mouseup',this.handleMouseUp,true);
 this.controller.listen(this.controller.document,'mousedown',this.handleMouseDown,true);
@@ -153,8 +150,6 @@ this.controller.stopListening(this.controller.document,'mousedown',this.handleEv
 this.controller.stopListening(this.controller.document,Mojo.Event.tap,this.handleEvent,true);
 }
 else {
-this.controller.stopListening(this.controller.document,Mojo.Event.hold,this.handleHold,true);
-this.controller.stopListening(this.controller.document,Mojo.Event.holdEnd,this.handleHoldEnd,true);
 this.controller.stopListening(this.controller.document,'mouseover',this.handleMouseOver,true);
 this.controller.stopListening(this.controller.document,'mouseup',this.handleMouseUp,true);
 this.controller.stopListening(this.controller.document,'mousedown',this.handleMouseDown,true);
@@ -535,6 +530,28 @@ var pickerDims=Mojo.View.getDimensions(picker);
 var targetOffset=Mojo.View.viewportOffset(this.target);
 
 /*
+Mojo.Log.error("char picker dims = " + Object.toJSON(Mojo.View.getDimensions(this.charPicker)));
+Mojo.Log.error("target dims = " + Object.toJSON(Mojo.View.getDimensions(this.target)));
+Mojo.Log.error("target style " + this.target.style);
+Mojo.Log.error("target top " + this.target.style.top);
+Mojo.Log.error("target offsettop " + this.target.offsetTop);
+Mojo.Log.error("viewport offset " + Object.toJSON(Mojo.View.viewportOffset(this.target)));
+
+Mojo.Log.error("cursor pos = " + cursorPos.x + ", " + cursorPos.y);
+Mojo.Log.error("viewDims = " + viewDims.width + " X " + viewDims.height);
+Mojo.Log.error("pickerDimes = " + pickerDims.width + " X " + pickerDims.height);
+Mojo.Log.error("pickerDims = " + Object.toJSON(pickerDims));
+*/
+/*
+Mojo.Log.error("0 dims " + Object.toJSON(Mojo.View.getDimensions(this.charDivs[0])));
+Mojo.Log.error("1 dims " + Object.toJSON(Mojo.View.getDimensions(this.charDivs[1])));
+Mojo.Log.error("2 dims " + Object.toJSON(Mojo.View.getDimensions(this.charDivs[2])));
+
+Mojo.Log.error("0 dims " + Object.toJSON(Mojo.View.viewportOffset(this.charDivs[0])));
+Mojo.Log.error("1 dims " + Object.toJSON(Mojo.View.viewportOffset(this.charDivs[1])));
+Mojo.Log.error("2 dims " + Object.toJSON(Mojo.View.viewportOffset(this.charDivs[2])));
+*/
+/*
 console.log("char picker dims = " + Object.toJSON(Mojo.View.getDimensions(this.charPicker)));
 console.log("target dims = " + Object.toJSON(Mojo.View.getDimensions(this.target)));
 console.log("target style " + this.target.style);
@@ -558,8 +575,18 @@ else if (cursorPos && (cursorPos.y >= top) && (cursorPos.y >= pickerDims.height)
 top+='px';
 
 picker.setStyle({'top':top,'left':'0px'});
+
+this.updateKeyLocations();
 },
 
+/* oskb */
+updateKeyLocations:function(){
+  for (var i=0; i<40; i++) {
+    var dimensions = Mojo.View.getDimensions(this.charDivs[i]);
+    var offsets = Mojo.View.viewportOffset(this.charDivs[i]);
+    this.keyLocations[i] = {left: offsets.left, top: offsets.top, width: dimensions.width, height: dimensions.height};
+  }
+},
 
 /* oskb */
 translateToRow:function(results){
@@ -654,6 +681,8 @@ this.charList.each(function(c){
   that.testDivs.push(data.descendants()[0]);
 });
 
+this.controller.scene.showWidgetContainer(this.charPicker);
+
 /* Adjust the width based on the span number */
 for (var i=0; i<40; i++) {
   if (this.charList[i]['normal'].span) {
@@ -661,9 +690,8 @@ for (var i=0; i<40; i++) {
     this._getMatching(this.charPicker,i).setStyle({"width":newWidth});
   }
 }
-this.controller.scene.showWidgetContainer(this.charPicker);
-this._setPopupPositions(this.charPicker);
 
+this._setPopupPositions(this.charPicker);
 this.selectedIndex=0;
 if (this.scrollEnabled) {
   this.controller.get(this.divPrefix+"-char-selector").mojo.revealElement(this.controller.get(this.divPrefix+"-50"));
@@ -882,6 +910,7 @@ popupChoose:function(value){
     this.toggleKey(this.dragIdx,"off");
     this.toggleKey(this.themeIdx,"off");
   }
+  this.themeSelector = undefined;
 },
 
 /* oskb */
@@ -1323,27 +1352,26 @@ var request2 = new Mojo.Service.Request('palm://com.palm.vibrate', {
 
 /* oskb */
 handleOrientation:function(event){
-/*TODO: I'm not sure why, but every change I get two events, back to back.
- *      For now just ignore the 2nd orient event */
-if (this.ignoreSecond) {
-  this.ignoreSecond=false;
-  return;
-}
-else {
-  this.ignoreSecond=true;
   this.maybeChangeLayout();
-}
 },
 
 /* oskb */
 stopRepeat:function(){
-  clearTimeout(this.timerId);
+  if (this.timerId) {
+    clearTimeout(this.timerId);
+    this.timerId = null;
+  }
 },
 
 /* oskb */
 repeatKey:function(name){
   this.exitSelector(this.charList[name]);
-  this.timerId = setTimeout(this.repeatKey.bind(this,name), 100);
+  if (this.timerId) {
+    this.timerId = setTimeout(this.repeatKey.bind(this,name), 100);
+  }
+  else {
+    this.timerId = setTimeout(this.repeatKey.bind(this,name), 500);
+  }
 },
 
 /* oskb */
@@ -1422,86 +1450,95 @@ handleEvent:function(event){
 },
 
 /* oskb */
-handleHoldEnd:function(event){
-  this.stopRepeat();
-},
+findKeyIndex:function(x, y){
+  var k;
 
-/* oskb */
-handleHold:function(event){
-  this.repeatKey(event.target.getAttribute('name'));
+  for (var i=0; i<40; i++) {
+    k = this.keyLocations[i];
+    if ((x >= k.left) && (x <= k.left + k.width) && (y >= k.top) && (y <= k.top + k.height)) {
+      return i;
+    }
+  }
 },
 
 /* oskb */
 handleMouseDown:function(event){
-if (this.scrollEnabled || this.dragEnabled) {
-  return;
-}
-
-if (this.isInKeyboard(event.target)) {
-  //event.stop();
-  this.stopScroll=true;
-  if (this.haptic > 0 && this.haptic <= 100) {
-    this.vibrate();
+  if (this.hidden || this.scrollEnabled || this.dragEnabled || this.themeSelector) {
+    return;
   }
 
-  var name = event.target.getAttribute('name');
+  var keyIndex = this.findKeyIndex(event.x, event.y);
+  this.doMouseDown(event, keyIndex);
+},
 
-  this.preview=this.charDivs[name];
-  if (this.preview) {
-    this.preview.addClassName("kb-selected-char");
+doMouseDown:function(event, keyIndex){
+  if (this.isInKeyboard(event.target)) {
+    event.stop();
+    this.stopScroll=true;
+    if (this.haptic > 0 && this.haptic <= 100)
+      this.vibrate();
+
+    this.lastKey = keyIndex;
+    this.repeatKey(keyIndex);
   }
-}
 },
 
 /* oskb */
 handleMouseOver:function(event){
   this.stopRepeat();
-if (this.scrollEnabled || this.dragEnabled) {
-  return;
-}
 
-if (this.preview && (this.preview !== event.target)) {
-  this.preview.removeClassName("kb-selected-char");
-  this.preview=undefined;
-}
+  var keyIndex = this.findKeyIndex(event.x, event.y);
 
-if (this.isInKeyboard(event.target)) {
-  //event.stop();
-  this.stopScroll=true;
-  var name = event.target.getAttribute('name');
-
-  this.preview=this.charDivs[name];
   if (this.preview) {
+    if (this.preview !== this.charDivs[keyIndex]) {
+      this.preview.removeClassName("kb-selected-char");
+      this.preview=undefined;
+    }
+  }
+
+  if (this.hidden || this.scrollEnabled || this.dragEnabled) {
+    return;
+  }
+
+  if (this.isInKeyboard(event.target)) {
+    event.stop();
+    this.stopScroll=true;
+    this.preview=this.charDivs[keyIndex];
     this.preview.addClassName("kb-selected-char");
   }
-}
 },
 
 /* oskb */
 handleMouseUp:function(event){
-this.stopScroll=false;
-if (this.scrollEnabled || this.dragEnabled) {
-  return;
-}
-
-if (this.isInKeyboard(event.target)) {
-  //event.stop();
-  if (this.clickFile) {
-    this.playClick();
-  }
+  this.stopRepeat();
+  this.stopScroll=false;
 
   if (this.preview) {
-    this.preview.removeClassName.bind(this.preview).defer("kb-selected-char");
+    this.preview.removeClassName("kb-selected-char");
     this.preview=undefined;
   }
 
-  if (this.state === this.VIRT_KB_OPEN){
-    this.exitSelector(this.getSelected(event.target));
+  if (this.hidden || this.scrollEnabled || this.dragEnabled){
+    return;
   }
-}
 
-if (this.themeSelector)
-  this.themeSelector=undefined;
+  this.doMouseUp(event);
+},
+
+doMouseUp:function(event){
+  if (this.isInKeyboard(event.target)) {
+    event.stop();
+
+    if (this.clickFile)
+      this.playClick();
+
+    if (this.state === this.VIRT_KB_OPEN){
+      var keyIndex = this.findKeyIndex(event.x, event.y);
+
+      if (this.lastKey !== keyIndex)
+        this.exitSelector(this.charList[this.findKeyIndex(event.x, event.y)]);
+    }
+  }
 },
 
 /* oskb */
@@ -1513,28 +1550,23 @@ handleFocusChange:function(event){
 
 /* oskb */
 handleTapEvent:function(event){
-if (!this.scrollEnabled) {
-  return;
-}
+  if (this.scrollEnabled) {
+    if (this.isInKeyboard(event.target)) {
+      var name = event.target.getAttribute('name');
 
-if (this.state === this.VIRT_KB_OPEN){
-  if (this.isInKeyboard(event.target)) {
-    //event.stop();
-    var name = event.target.getAttribute('name');
+      this.preview=this.charDivs[name];
 
-    this.preview=this.charDivs[name];
-    if (this.preview) {
-      this.preview.addClassName("kb-selected-char");
-    }
-    this.exitSelector(this.charList[name]);
-    if (this.preview) {
-      this.preview.removeClassName.bind(this.preview).defer("kb-selected-char");
+      if (this.preview)
+        this.preview.addClassName("kb-selected-char");
+
+      this.exitSelector(this.charList[name]);
+
+      if (this.preview)
+        this.preview.removeClassName.bind(this.preview).defer("kb-selected-char");
+
+      event.stop();
     }
   }
-}
-
-if (this.themeSelector)
-  this.themeSelector=undefined;
 },
 
 /* oskb */
@@ -1578,6 +1610,7 @@ if (this.dragEnabled && !this.scrollEnabled) {
   this.keyboard.setStyle({"top":"0px"});
   this.dragEnabled = false;
   this.toggleKey(this.dragIdx,"off");
+  this.updateKeyLocations();
 }
 else if (this.stopScroll) {
   event.stop();
