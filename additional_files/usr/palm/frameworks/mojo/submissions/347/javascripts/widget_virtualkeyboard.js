@@ -87,9 +87,7 @@ this.handleDragEnd=this.handleDragEnd.bindAsEventListener(this);
 this.handleDragging=this.handleDragging.bindAsEventListener(this);
 this.handleKeyEvent=this.handleKeyEvent.bind(this);
 this.handleKeyUpEvent=this.handleKeyUpEvent.bind(this);
-/*
 this.handleTapEvent=this.handleTapEvent.bind(this);
-*/
 this.handleFocusChange=this.handleFocusChange.bind(this);
 this.handleOrientation=this.handleOrientation.bindAsEventListener(this);
 this.handleEvent = this.handleEvent.bindAsEventListener(this);
@@ -113,9 +111,7 @@ else {
 this.controller.listen(this.controller.document,'mouseover',this.handleMouseOver,true);
 this.controller.listen(this.controller.document,'mouseup',this.handleMouseUp,true);
 this.controller.listen(this.controller.document,'mousedown',this.handleMouseDown,true);
-/*
 this.controller.listen(this.controller.document,Mojo.Event.tap,this.handleTapEvent,true);
-*/
 }
 
 this.enterOpenState();
@@ -157,9 +153,7 @@ else {
 this.controller.stopListening(this.controller.document,'mouseover',this.handleMouseOver,true);
 this.controller.stopListening(this.controller.document,'mouseup',this.handleMouseUp,true);
 this.controller.stopListening(this.controller.document,'mousedown',this.handleMouseDown,true);
-/*
 this.controller.stopListening(this.controller.document,Mojo.Event.tap,this.handleTapEvent,true);
-*/
 }
 
 },
@@ -916,6 +910,7 @@ popupChoose:function(value){
     this.toggleKey(this.dragIdx,"off");
     this.toggleKey(this.themeIdx,"off");
   }
+  this.themeSelector = undefined;
 },
 
 /* oskb */
@@ -1468,34 +1463,31 @@ findKeyIndex:function(x, y){
 
 /* oskb */
 handleMouseDown:function(event){
+  if (this.hidden || this.scrollEnabled || this.dragEnabled || this.themeSelector) {
+    return;
+  }
+
   var keyIndex = this.findKeyIndex(event.x, event.y);
-
-  this.preview=this.charDivs[keyIndex];
-  this.preview.addClassName("kb-selected-char");
-  this.doMouseDown.bind(this).defer(event, keyIndex);
-
-  event.stop();
+  this.doMouseDown(event, keyIndex);
 },
 
 doMouseDown:function(event, keyIndex){
-  if (this.scrollEnabled || this.dragEnabled)
-    return;
-
   if (this.isInKeyboard(event.target)) {
+    event.stop();
     this.stopScroll=true;
     if (this.haptic > 0 && this.haptic <= 100)
       this.vibrate();
 
-  this.lastKey = keyIndex;
-  this.repeatKey(keyIndex);
+    this.lastKey = keyIndex;
+    this.repeatKey(keyIndex);
   }
 },
 
 /* oskb */
 handleMouseOver:function(event){
-  var keyIndex = this.findKeyIndex(event.x, event.y);
-
   this.stopRepeat();
+
+  var keyIndex = this.findKeyIndex(event.x, event.y);
 
   if (this.preview) {
     if (this.preview !== this.charDivs[keyIndex]) {
@@ -1504,52 +1496,39 @@ handleMouseOver:function(event){
     }
   }
 
+  if (this.hidden || this.scrollEnabled || this.dragEnabled) {
+    return;
+  }
+
   if (this.isInKeyboard(event.target)) {
+    event.stop();
     this.stopScroll=true;
     this.preview=this.charDivs[keyIndex];
     this.preview.addClassName("kb-selected-char");
   }
-
-  event.stop();
-  /*
-if (this.scrollEnabled || this.dragEnabled) {
-  return;
-}
-*/
-
-/*
-if (this.isInKeyboard(event.target)) {
-  event.stop();
-  this.stopScroll=true;
-  var keyIndex = this.findKeyIndex(event.x, event.y);
-
-  this.preview=this.charDivs[keyIndex];
-  if (this.preview) {
-    this.preview.addClassName("kb-selected-char");
-  }
-}
-*/
 },
 
 /* oskb */
 handleMouseUp:function(event){
-  event.stop();
+  this.stopRepeat();
+  this.stopScroll=false;
 
   if (this.preview) {
     this.preview.removeClassName("kb-selected-char");
     this.preview=undefined;
   }
 
-  this.doMouseUp.bind(this).defer(event);
+  if (this.hidden || this.scrollEnabled || this.dragEnabled){
+    return;
+  }
+
+  this.doMouseUp(event);
 },
 
 doMouseUp:function(event){
-  this.stopRepeat();
-  this.stopScroll=false;
-  if (this.scrollEnabled || this.dragEnabled)
-    return;
-
   if (this.isInKeyboard(event.target)) {
+    event.stop();
+
     if (this.clickFile)
       this.playClick();
 
@@ -1560,9 +1539,6 @@ doMouseUp:function(event){
         this.exitSelector(this.charList[this.findKeyIndex(event.x, event.y)]);
     }
   }
-
-  if (this.themeSelector)
-    this.themeSelector=undefined;
 },
 
 /* oskb */
@@ -1573,34 +1549,25 @@ handleFocusChange:function(event){
 },
 
 /* oskb */
-  /*
 handleTapEvent:function(event){
-event.stop();
-return;
-if (!this.scrollEnabled) {
-  return;
-}
+  if (this.scrollEnabled) {
+    if (this.isInKeyboard(event.target)) {
+      var name = event.target.getAttribute('name');
 
-if (this.state === this.VIRT_KB_OPEN){
-  if (this.isInKeyboard(event.target)) {
-    event.stop();
-    var name = event.target.getAttribute('name');
+      this.preview=this.charDivs[name];
 
-    this.preview=this.charDivs[name];
-    if (this.preview) {
-      this.preview.addClassName("kb-selected-char");
-    }
-    this.exitSelector(this.charList[name]);
-    if (this.preview) {
-      this.preview.removeClassName.bind(this.preview).defer("kb-selected-char");
+      if (this.preview)
+        this.preview.addClassName("kb-selected-char");
+
+      this.exitSelector(this.charList[name]);
+
+      if (this.preview)
+        this.preview.removeClassName.bind(this.preview).defer("kb-selected-char");
+
+      event.stop();
     }
   }
-}
-
-if (this.themeSelector)
-  this.themeSelector=undefined;
 },
-*/
 
 /* oskb */
 handleDragStart:function(event){
@@ -1643,6 +1610,7 @@ if (this.dragEnabled && !this.scrollEnabled) {
   this.keyboard.setStyle({"top":"0px"});
   this.dragEnabled = false;
   this.toggleKey(this.dragIdx,"off");
+  this.updateKeyLocations();
 }
 else if (this.stopScroll) {
   event.stop();
