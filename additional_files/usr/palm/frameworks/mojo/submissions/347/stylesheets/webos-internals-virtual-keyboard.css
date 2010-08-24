@@ -86,10 +86,18 @@
 }
 
 /* Landscape rows */
-.kb-char-selector-container.landscape {
+.kb-char-select-container.landscape.Pixi {
+  width: 400px;
+}
+
+.kb-char-selector-column.landscape.Pixi {
+  width: 400px;
+}
+
+.kb-char-selector-container.landscape.Pre {
   width: 480px;
 }
 
-.kb-char-selector-column.landscape {
+.kb-char-selector-column.landscape.Pre {
   width: 480px;
 }

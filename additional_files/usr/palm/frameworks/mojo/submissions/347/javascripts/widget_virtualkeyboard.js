@@ -600,8 +600,9 @@ while(!finished){
 result={};
 
 
-result.characters=Mojo.View.render({collection:results.slice(newOffset,newOffset+this.HI_COLUMNS),attributes:{divPrefix:this.divPrefix},template:this.itemTemplate});
+result.characters=Mojo.View.render({collection:results.slice(newOffset,newOffset+this.HI_COLUMNS),attributes:{device: Mojo.Environment.DeviceInfo.modelNameAscii, divPrefix:this.divPrefix},template:this.itemTemplate});
 newOffset+=this.HI_COLUMNS;
+result.device = Mojo.Environment.DeviceInfo.modelNameAscii;
 transformedResults.push(result);
 if(newOffset>=results.length){
 finished=true;
@@ -623,6 +624,7 @@ this.loadTable(chr);
 if(this.charList&&this.charList.length>0){
 
 charContentModel={
+device:Mojo.Environment.DeviceInfo.modelNameAscii,
 divPrefix:this.divPrefix
 };
 
