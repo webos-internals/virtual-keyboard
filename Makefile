@@ -1,7 +1,7 @@
 APP_ID=$(shell cat appinfo.json | grep id | cut -d\" -f4)
 VERSION=$(shell cat appinfo.json | grep version | cut -d\" -f4)
 WEBOS_VERSION=$(shell git branch | grep ^\* | cut -d- -f2)
-DOCTOR_DIR=/source/webos_doctors
+DOCTOR_DIR=/common/source/webos_doctors
 ROOT=${DOCTOR_DIR}/root-${WEBOS_VERSION}
 PWD=$(shell pwd)
 PATCH_FILE=${PWD}/add-onscreen-keyboard.patch
@@ -62,10 +62,18 @@ remove-usb:
 install-usb: package
 	palm-install -d usb ipkgs/com.egaudet.vkb-test_1.0.0_all.ipk
 
+.PHONY: install-tcp
+install-tcp: package
+	palm-install -d tcp ipkgs/com.egaudet.vkb-test_1.0.0_all.ipk
+
+.PHONY: remove-tcp
+remove-tcp:
+	palm-install -d tcp -r com.egaudet.vkb-test
+
 .PHONY: package
 package: ipkgs/com.egaudet.vkb-test_1.0.0_all.ipk
 	~/webos-internals/build/toolchain/ipkg-utils/ipkg-make-index -v -p ipkgs/Packages ipkgs/
-	rsync -av ipkgs/ /source/www/feeds/test
+	rsync -av ipkgs/ /common/source/www/feeds/test
 
 ipkgs/%: build/CONTROL/postinst build/CONTROL/prerm build/CONTROL/control build/usr/palm/applications/com.egaudet.vkb-test
 	mkdir -p ipkgs
